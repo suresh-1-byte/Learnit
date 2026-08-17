@@ -1,0 +1,6 @@
+# Vercel ignore file
+.env
+.env.local
+.env.*.local
+node_modules
+.git
