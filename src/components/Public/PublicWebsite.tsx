@@ -191,7 +191,7 @@ const articlesList: Article[] = [
     date: 'Aug 2, 2026',
     author: 'Siva (Chief Executive Officer)',
     summary: "Exploring LearnIT's ambitious plans to transform how colleges deliver industry-aligned education across India.",
-    content: 'LearnIT is building a comprehensive platform that will connect engineering colleges with real industry mentors and modern curriculum. We plan to introduce AI-powered learning analytics, blockchain-verified certifications, and seamless placement integrations. Our upcoming features will include adaptive learning paths, real-time skill gap analysis, and direct recruitment pipelines with Fortune 500 companies.'
+    content: 'LearnIT is building a comprehensive platform that will connect engineering colleges with real industry mentors and modern curriculum. We plan to introduce AI-powered learning analytics, blockchain-verified certifications, and seamless placement integrations. Our upcoming features will include adaptive learning paths, real-time skill gap analysis, and direct recruitment pipelines with leading technology companies.'
   },
   {
     id: 'art-2',
@@ -229,7 +229,7 @@ const faqList = [
   {
     category: 'Placements',
     q: "What is the placement support mechanism?",
-    a: "Students who achieve 85%+ attendance and complete required capstone projects gain direct entry into 150+ corporate recruitment drives hosted on our platform."
+    a: "Students who achieve 85%+ attendance and complete required capstone projects will gain access to corporate recruitment drives hosted on our platform."
   },
   {
     category: 'Institutional ERP',
@@ -265,7 +265,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
     contactPerson: '',
     phone: '',
     email: '',
-    studentCount: '500-1000',
+    studentCount: '100-300',
     message: ''
   });
   const [demoSubmitted, setDemoSubmitted] = useState<boolean>(false);
@@ -696,30 +696,30 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 >
                   <p className={`text-2xl sm:text-3xl font-extrabold font-mono ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>12,500+</p>
+                  }`}>Building</p>
                   <p className={`text-xs font-medium mt-0.5 ${
                     theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                  }`}>Students Trained</p>
+                  }`}>Platform in Development</p>
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1 }} 
                   transition={{ type: "spring", stiffness: 400 }}
                   className="cursor-pointer"
                 >
-                  <p className="text-2xl sm:text-3xl font-extrabold text-[#6366F1] font-mono">48+</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-[#6366F1] font-mono">2</p>
                   <p className={`text-xs font-medium mt-0.5 ${
                     theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                  }`}>Partner Colleges</p>
+                  }`}>Pilot Colleges</p>
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1 }} 
                   transition={{ type: "spring", stiffness: 400 }}
                   className="cursor-pointer"
                 >
-                  <p className="text-2xl sm:text-3xl font-extrabold text-[#10B981] font-mono">94.8%</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-[#10B981] font-mono">2026</p>
                   <p className={`text-xs font-medium mt-0.5 ${
                     theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                  }`}>Placement Rate</p>
+                  }`}>Launch Target</p>
                 </motion.div>
               </motion.div>
             </motion.div>
@@ -933,7 +933,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               <p className={`text-center text-xs font-bold uppercase tracking-widest ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
               }`}>
-                Trusted By 48+ Engineering Campuses & Top Recruiter Networks
+                Building Partnerships with Engineering Campuses & Recruiter Networks
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-80">
@@ -960,10 +960,10 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
-                { value: '12,500+', label: 'Students Enrolled & Certified', color: theme === 'dark' ? '#FFFFFF' : '#111827' },
-                { value: '48+', label: 'Partner Colleges', color: '#6366F1' },
-                { value: '94.8%', label: 'Placement Rate', color: '#10B981' },
-                { value: '150+', label: 'Recruiting Companies', color: '#A855F7' }
+                { value: 'Launching', label: 'Platform in Development', color: theme === 'dark' ? '#FFFFFF' : '#111827' },
+                { value: '2', label: 'Pilot Colleges', color: '#6366F1' },
+                { value: '2026', label: 'Launch Target Year', color: '#10B981' },
+                { value: 'Growing', label: 'Building Network', color: '#A855F7' }
               ].map((stat, idx) => (
                 <motion.div 
                   key={idx}
@@ -1275,10 +1275,10 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                             {/* KPI Cards */}
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-2 sm:mb-4">
                               {[
-                                { label: 'Students', value: '12.5K', color: '#6366F1' },
-                                { label: 'Colleges', value: '48', color: '#A855F7' },
-                                { label: 'Placement', value: '94.8%', color: '#10B981' },
-                                { label: 'Revenue', value: '₹48.5L', color: '#F59E0B' }
+                                { label: 'Students', value: 'Demo', color: '#6366F1' },
+                                { label: 'Colleges', value: '2', color: '#A855F7' },
+                                { label: 'Building', value: '2026', color: '#10B981' },
+                                { label: 'Platform', value: 'Beta', color: '#F59E0B' }
                               ].map((kpi, i) => (
                                 <div key={i} className="bg-[#111] rounded-xl p-2 sm:p-3 border border-white/5 hover:border-white/10 transition-all animate-pulse-glow" style={{ animationDelay: `${i * 200}ms` } as React.CSSProperties}>
                                   <p className="text-[8px] sm:text-[9px] text-[#666]">{kpi.label}</p>
@@ -1596,7 +1596,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
               {[
                 { step: '01', title: 'Register', desc: 'Onboarding & skill diagnostic test', icon: <Compass className="w-5 h-5 text-[#6366F1]" />, color: '#6366F1' },
-                { step: '02', title: 'Training', desc: '400+ hrs live masterclasses', icon: <BookOpen className="w-5 h-5 text-[#A855F7]" />, color: '#A855F7' },
+                { step: '02', title: 'Training', desc: 'Comprehensive live masterclasses', icon: <BookOpen className="w-5 h-5 text-[#A855F7]" />, color: '#A855F7' },
                 { step: '03', title: 'Projects', desc: 'Real-world capstone GitHub repos', icon: <Code className="w-5 h-5 text-[#10B981]" />, color: '#10B981' },
                 { step: '04', title: 'Assessment', desc: 'Mock interviews & coding evaluations', icon: <Target className="w-5 h-5 text-[#F59E0B]" />, color: '#F59E0B' },
                 { step: '05', title: 'Certification', desc: 'Tamper-proof QR transcript badge', icon: <Award className="w-5 h-5 text-[#3B82F6]" />, color: '#3B82F6' },
@@ -1916,7 +1916,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             <p className={`text-xs sm:text-sm max-w-xl mx-auto leading-relaxed ${
               theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
             }`}>
-              Join 48+ leading engineering institutions modernizing their academic delivery and campus placement drives.
+              Join leading engineering institutions ready to modernize their academic delivery and campus placement drives.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-2">
               <button
@@ -1985,7 +1985,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               },
               { 
                 title: 'Our Vision', 
-                desc: 'To become the universal SaaS operating system for technical higher education across 500+ global partner campuses by 2030.',
+                desc: 'To become the universal SaaS operating system for technical higher education, connecting colleges, students, and industry partners.',
                 icon: <Compass className="w-5 h-5" />,
                 color: '#A855F7'
               },
@@ -2268,7 +2268,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               animate={{ y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Direct campus recruitment partnerships with 150+ leading technology companies, offering competitive packages and career growth opportunities.
+              Building direct campus recruitment partnerships with leading technology companies to offer competitive packages and career growth opportunities.
             </motion.p>
           </motion.div>
 
@@ -2298,10 +2298,10 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#A855F7]' : 'text-[#A855F7]'
-              }`}>2,500+</div>
+              }`}>Starting</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-              }`}>Students Placed</div>
+              }`}>Building Pipeline</div>
             </div>
             <div className={`p-6 rounded-2xl border text-center space-y-2 ${
               theme === 'dark' 
@@ -2310,10 +2310,10 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#6366F1]' : 'text-[#6366F1]'
-              }`}>150+</div>
+              }`}>Growing</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-              }`}>Hiring Partners</div>
+              }`}>Partner Network</div>
             </div>
             <div className={`p-6 rounded-2xl border text-center space-y-2 ${
               theme === 'dark' 
@@ -2395,7 +2395,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                   </div>
                   <p className={`text-xs ${
                     theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                  }`}>Connect with pre-screened talent from 48+ engineering institutions with verified skills.</p>
+                  }`}>Connect with pre-screened talent from partner engineering institutions with verified skills.</p>
                 </motion.div>
                 <motion.div 
                   className={`p-4 rounded-xl border space-y-2 ${
@@ -2817,7 +2817,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 </div>
                 <p className={`text-xs ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                }`}>Courses designed with Fortune 500 tech architects to ensure real-world relevance.</p>
+                }`}>Courses designed with industry professionals to ensure real-world relevance.</p>
               </motion.div>
               <motion.div 
                 className={`p-4 rounded-xl border space-y-2 ${
@@ -2861,7 +2861,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 </div>
                 <p className={`text-xs ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                }`}>Direct access to 150+ corporate recruitment drives and hiring partners.</p>
+                }`}>Direct access to corporate recruitment drives and hiring partners.</p>
               </motion.div>
             </div>
           </motion.div>
@@ -3448,8 +3448,9 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                     }`}
                   >
                     <option value="100-300">100 - 300 Students</option>
+                    <option value="300-500">300 - 500 Students</option>
                     <option value="500-1000">500 - 1,000 Students</option>
-                    <option value="1000+">1,000+ Campus Students</option>
+                    <option value="1000+">1,000+ Students</option>
                   </select>
                 </div>
 
