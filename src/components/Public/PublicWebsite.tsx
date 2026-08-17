@@ -189,7 +189,7 @@ const articlesList: Article[] = [
     category: 'Future Roadmap',
     readTime: '5 min read',
     date: 'Aug 2, 2026',
-    author: 'Siva (Chief Executive Officer)',
+    author: 'Shiva (Chief Executive Officer)',
     summary: "Exploring LearnIT's ambitious plans to transform how colleges deliver industry-aligned education across India.",
     content: 'LearnIT is building a comprehensive platform that will connect engineering colleges with real industry mentors and modern curriculum. We plan to introduce AI-powered learning analytics, blockchain-verified certifications, and seamless placement integrations. Our upcoming features will include adaptive learning paths, real-time skill gap analysis, and direct recruitment pipelines with leading technology companies.'
   },
@@ -1143,9 +1143,9 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             <div className="relative min-h-[700px] flex items-center justify-center py-12 px-4">
               {/* Background Effects */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#6366F1]/20 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#A855F7]/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#10B981]/10 rounded-full blur-[120px]" />
+                <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-[#6366F1]/20 rounded-full blur-[100px] animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-[#A855F7]/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-[#10B981]/10 rounded-full blur-[120px]" />
               </div>
 
               {/* Floating Feature Callouts */}
@@ -2058,7 +2058,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             </motion.h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { name: 'Sivan', role: 'Chief Executive Officer', ex: 'Visionary Leader & Tech Strategist' },
+                { name: 'Shiva', role: 'Chief Executive Officer', ex: 'Visionary Leader & Tech Strategist' },
                 { name: 'Suresh', role: 'Chief Operating Officer', ex: 'Leads operational strategy, business coordination and organizational execution' },
                 { name: 'Vijay', role: 'Head of Placement Operations', ex: 'Focuses on placement coordination, employer engagement and career-readiness initiatives' },
                 { name: 'Mohan Ram', role: 'Chief Technology Officer', ex: 'Drives technology strategy, platform development and digital innovation' }
