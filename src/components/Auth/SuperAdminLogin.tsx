@@ -1,0 +1,118 @@
+import React, { useState } from 'react';
+import {
+  GraduationCap,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ShieldCheck,
+  X
+} from 'lucide-react';
+import { UserRole } from '../../types';
+
+interface SuperAdminLoginProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onLoginSuccess: (role: UserRole) => void;
+}
+
+export const SuperAdminLogin: React.FC<SuperAdminLoginProps> = ({
+  isOpen,
+  onClose,
+  onLoginSuccess
+}) => {
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    onLoginSuccess('super_admin');
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+      <div className="bg-[#0A0A0A] rounded-2xl max-w-md w-full shadow-2xl border border-[#1A1A1A] relative overflow-hidden">
+      {/* Close Modal Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-[#111] hover:bg-[#222] text-[#888] hover:text-white transition-colors border border-[#222]"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      {/* Header */}
+      <div className="bg-gradient-to-br from-[#1E1B4B] via-[#111838] to-[#0B0F28] p-8 sm:p-10 text-center">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-none bg-white flex items-center justify-center text-white shadow-xl mx-auto mb-3 sm:mb-4 overflow-hidden">
+          <img src="/logo.png" alt="LearnIT Logo" className="w-full h-full object-contain" />
+        </div>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Super Admin Portal</h1>
+        <p className="text-[10px] sm:text-xs text-[#AAA] mt-1 sm:mt-2">Restricted Access • Authorized Personnel Only</p>
+      </div>
+
+      {/* Form */}
+      <div className="p-8 sm:p-10 space-y-4 sm:space-y-5">
+        <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
+          <div className="space-y-1">
+            <label className="text-xs font-mono uppercase text-[#888] font-bold block">
+              Admin ID / Email
+            </label>
+            <div className="relative">
+              <User className="w-4 h-4 text-[#555] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                required
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="Enter admin credentials"
+                className="w-full pl-10 pr-4 py-3 bg-[#111] border border-[#222] focus:border-[#A855F7] rounded-xl text-sm text-white outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-mono uppercase text-[#888] font-bold block">
+              Security Password
+            </label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-[#555] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter security password"
+                className="w-full pl-10 pr-12 py-3 bg-[#111] border border-[#222] focus:border-[#A855F7] rounded-xl text-sm text-white outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666] hover:text-white"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-[#A855F7] to-[#6366F1] hover:from-purple-600 hover:to-indigo-600 text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+          >
+            Access Admin Dashboard <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
+
+        <div className="pt-3 sm:pt-4 border-t border-[#1A1A1A] text-center">
+          <p className="text-[10px] sm:text-[11px] text-[#666]">
+            Unauthorized access attempts are logged and monitored.
+          </p>
+        </div>
+      </div>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,6 @@
+{
+  "name": "Learn It Platform",
+  "description": "Enterprise Education Technology & ERP Platform connecting Learn It HQ, partner colleges, mentors, students, and placement officers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    min-height: 100%;
+  }
+  
+  /* Dark Theme Variables - Spatial UI */
+  html.dark {
+    /* Base Colors */
+    --background: #0B0B10;
+    --foreground: #EDEDED;
+    
+    /* Spatial Surfaces */
+    --surface: #0D0D14;
+    --surface-elevated: #14141C;
+    --surface-elevated-2: #1A1A24;
+    --surface-muted: #1A1A1A;
+    --surface-glass: rgba(13, 13, 20, 0.8);
+    --surface-glass-strong: rgba(13, 13, 20, 0.95);
+    
+    /* Borders */
+    --border: #1A1A1A;
+    --border-subtle: #222222;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    
+    /* Text */
+    --text-primary: #FFFFFF;
+    --text-secondary: #BBB;
+    --text-muted: #777;
+    --text-on-surface: #EDEDED;
+    
+    /* Icons */
+    --icon: #777;
+    --icon-muted: #555;
+    --icon-accent: #6366F1;
+    
+    /* Inputs */
+    --input-background: #111;
+    --input-border: #222;
+    --input-focus-glow: rgba(99, 102, 241, 0.15);
+    
+    /* Component Backgrounds */
+    --header-background: #0D0D14;
+    --sidebar-background: #0D0D14;
+    --card-background: #0A0A0A;
+    --hero-background: #050505;
+    
+    /* Spatial Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+    --shadow-glow-strong: 0 0 30px rgba(99, 102, 241, 0.25);
+    
+    /* Spatial Glows */
+    --glow-primary: rgba(99, 102, 241, 0.4);
+    --glow-secondary: rgba(168, 85, 247, 0.4);
+    --glow-success: rgba(16, 185, 129, 0.4);
+    --glow-ambient: rgba(99, 102, 241, 0.08);
+    
+    /* Ambient Background */
+    --ambient-gradient: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom left, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+    
+    /* Accents */
+    --accent-primary: #6366F1;
+    --accent-secondary: #A855F7;
+    --accent-emerald: #10B981;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    
+    /* Spatial Effects */
+    --blur-sm: 8px;
+    --blur: 12px;
+    --blur-lg: 20px;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition: 250ms;
+    --transition-slow: 350ms;
+    
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  /* Light Theme Variables - Spatial UI */
+  html.light {
+    /* Base Colors */
+    --background: #F7F8FC;
+    --foreground: #0F172A;
+    
+    /* Spatial Surfaces */
+    --surface: #FFFFFF;
+    --surface-elevated: #F8FAFC;
+    --surface-elevated-2: #F1F5F9;
+    --surface-muted: #E2E8F0;
+    --surface-glass: rgba(255, 255, 255, 0.85);
+    --surface-glass-strong: rgba(255, 255, 255, 0.95);
+    
+    /* Borders */
+    --border: #E2E8F0;
+    --border-subtle: #CBD5E1;
+    --border-glass: rgba(0, 0, 0, 0.06);
+    
+    /* Text */
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --text-on-surface: #0F172A;
+    
+    /* Icons */
+    --icon: #64748B;
+    --icon-muted: #94A3B8;
+    --icon-accent: #6366F1;
+    
+    /* Inputs */
+    --input-background: #F8FAFC;
+    --input-border: #E2E8F0;
+    --input-focus-glow: rgba(99, 102, 241, 0.1);
+    
+    /* Component Backgrounds */
+    --header-background: #FFFFFF;
+    --sidebar-background: #FFFFFF;
+    --card-background: #FFFFFF;
+    --hero-background: #FFFFFF;
+    
+    /* Spatial Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.12);
+    --shadow-glow-strong: 0 0 30px rgba(99, 102, 241, 0.18);
+    
+    /* Spatial Glows */
+    --glow-primary: rgba(99, 102, 241, 0.3);
+    --glow-secondary: rgba(168, 85, 247, 0.3);
+    --glow-success: rgba(16, 185, 129, 0.3);
+    --glow-ambient: rgba(99, 102, 241, 0.05);
+    
+    /* Ambient Background */
+    --ambient-gradient: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.04) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom left, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+    
+    /* Accents */
+    --accent-primary: #6366F1;
+    --accent-secondary: #A855F7;
+    --accent-emerald: #10B981;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    
+    /* Spatial Effects */
+    --blur-sm: 8px;
+    --blur: 12px;
+    --blur-lg: 20px;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition: 250ms;
+    --transition-slow: 350ms;
+    
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  body {
+    min-height: 100%;
+    transition: background-color var(--transition) ease, color var(--transition) ease, border-color var(--transition) ease, box-shadow var(--transition) ease;
+  }
+  
+  /* Spatial Background Base */
+  .spatial-background {
+    background: var(--background);
+    background-image: var(--ambient-gradient);
+    background-attachment: fixed;
+  }
+  
+  /* Spatial Surface Base */
+  .spatial-surface {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  
+  /* Spatial Glass */
+  .spatial-glass {
+    background: var(--surface-glass);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+  }
+  
+  /* Spatial Elevated */
+  .spatial-elevated {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* Spatial Glow */
+  .spatial-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Spatial Hover Effect */
+  .spatial-hover {
+    transition: transform var(--transition) ease, box-shadow var(--transition) ease, border-color var(--transition) ease;
+  }
+  
+  .spatial-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}

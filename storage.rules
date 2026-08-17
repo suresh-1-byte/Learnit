@@ -1,0 +1,63 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if file size is acceptable (max 50MB)
+    function isValidSize() {
+      return request.resource.size < 50 * 1024 * 1024;
+    }
+    
+    // Helper function to check if file size is acceptable for videos (max 500MB)
+    function isValidVideoSize() {
+      return request.resource.size < 500 * 1024 * 1024;
+    }
+    
+    // Assignments folder
+    match /assignments/{mentorId}/{assignmentId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    // Submissions folder
+    match /submissions/{assignmentId}/{studentId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+                     request.auth.uid == studentId && 
+                     isValidSize();
+    }
+    
+    // Materials folder
+    match /materials/{mentorId}/{materialId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+                     request.auth.uid == mentorId && 
+                     isValidSize();
+    }
+    
+    // Videos folder (larger size limit)
+    match /videos/{mentorId}/{videoId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+                     request.auth.uid == mentorId && 
+                     isValidVideoSize();
+    }
+    
+    // Profile images
+    match /profiles/{userId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+                     request.auth.uid == userId && 
+                     request.resource.size < 5 * 1024 * 1024; // 5MB limit
+    }
+    
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
