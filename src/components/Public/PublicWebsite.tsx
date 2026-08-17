@@ -110,7 +110,7 @@ const programsList: Program[] = [
     duration: '6 Months (400 Hours)',
     mode: 'Hybrid (Campus + Live LMS)',
     eligibility: 'B.Tech / B.E. / MCA (3rd & 4th Year)',
-    avgPackage: '8.5 - 18.0 LPA',
+    avgPackage: '5.5 - 6.5 LPA',
     icon: <Code className="w-5 h-5 text-[#6366F1]" />,
     outcomes: ['Build scalable React/TypeScript apps', 'Architect RESTful & GraphQL microservices', 'CI/CD deployment on AWS Cloud'],
     modules: [
@@ -129,7 +129,7 @@ const programsList: Program[] = [
     duration: '5 Months (350 Hours)',
     mode: 'Live Interactive Sessions',
     eligibility: 'Engineering & Science Graduates',
-    avgPackage: '9.2 - 22.0 LPA',
+    avgPackage: '6.0 - 7.5 LPA',
     icon: <Sparkles className="w-5 h-5 text-[#A855F7]" />,
     outcomes: ['Deploy LLM & GenAI apps', 'Master Python Data Science stack', 'Build real-time streaming pipelines'],
     modules: [
@@ -148,7 +148,7 @@ const programsList: Program[] = [
     duration: '4 Months (300 Hours)',
     mode: 'Online + Hands-on Labs',
     eligibility: 'CSE / IT / ECE Students',
-    avgPackage: '7.8 - 16.5 LPA',
+    avgPackage: '5.0 - 6.5 LPA',
     icon: <ShieldCheck className="w-5 h-5 text-[#10B981]" />,
     outcomes: ['AWS & Azure Cloud Certified skills', 'Automate Kubernetes clusters', 'Implement Zero Trust security'],
     modules: [
@@ -167,7 +167,7 @@ const programsList: Program[] = [
     duration: '4 Months (250 Hours)',
     mode: 'Weekend Masterclasses',
     eligibility: 'MBA / Final Year Engineering',
-    avgPackage: '10.5 - 24.0 LPA',
+    avgPackage: '6.0 - 8.0 LPA',
     icon: <BarChart3 className="w-5 h-5 text-[#F59E0B]" />,
     outcomes: ['Product Requirement Documents (PRDs)', 'SQL & PowerBI analytics', 'Agile Scrum leadership'],
     modules: [
@@ -853,14 +853,14 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                       <div>
                         <h4 className={`text-xs font-bold ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>Campus Placement Drive</h4>
+                        }`}>Upcoming Placement Drive</h4>
                         <p className={`text-[10px] ${
                           theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-                        }`}>Microsoft • SDE 1 Role</p>
+                        }`}>TBD • Opening Soon</p>
                       </div>
                     </div>
                     <span className="text-xs font-mono font-bold text-[#A855F7] bg-[#A855F7]/10 px-2 py-1 rounded-lg border border-[#A855F7]/20">
-                      24.5 LPA Offer
+                      6.5 LPA Target
                     </span>
                   </motion.div>
 
@@ -937,7 +937,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-80">
-                {['St. Xavier\'s Tech', 'Delhi Engineering Coll.', 'BNIT Bangalore', 'Hyderabad Tech Uni.', 'Pune Eng. Academy', 'Microsoft', 'Amazon AWS', 'Goldman Sachs'].map((brand, i) => (
+                {['Partner College 1', 'Partner College 2', 'Building Network', 'Coming Soon'].map((brand, i) => (
                   <span key={i} className={`text-xs sm:text-sm font-bold font-mono tracking-tight transition-colors ${
                     theme === 'dark' ? 'text-[#AAA] hover:text-white' : 'text-gray-700 hover:text-gray-900'
                   }`}>
@@ -2322,7 +2322,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#F59E0B]' : 'text-[#F59E0B]'
-              }`}>8.5 LPA</div>
+              }`}>6.5 LPA</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
               }`}>Average Package</div>
@@ -2520,119 +2520,19 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               <h2 className={`text-2xl font-bold ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}>Active Placement Drives</h2>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                theme === 'dark' 
-                  ? 'bg-[#A855F7]/10 text-[#A855F7]' 
-                  : 'bg-[#A855F7]/10 text-[#A855F7]'
-              }`}>5 Drives This Month</span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { 
-                  company: 'Microsoft', 
-                  icon: 'https://img.shields.io/badge/Microsoft-0089D6?style=for-the-badge&logo=microsoft&logoColor=white',
-                  role: 'Software Development Engineer', 
-                  status: 'Open',
-                  ctc: '24.5 LPA',
-                  location: 'Bangalore/Hyderabad',
-                  deadline: 'Aug 25, 2026'
-                },
-                { 
-                  company: 'Amazon', 
-                  icon: 'https://img.shields.io/badge/Amazon-FF9900?style=for-the-badge&logo=amazon&logoColor=white',
-                  role: 'SDE Intern', 
-                  status: 'Open',
-                  ctc: '₹1,20,000 / month',
-                  location: 'Bangalore',
-                  deadline: 'Aug 28, 2026'
-                },
-                { 
-                  company: 'Zoho', 
-                  icon: 'https://img.shields.io/badge/Zoho-EA4335?style=for-the-badge&logo=zoho&logoColor=white',
-                  role: 'Junior Software Developer', 
-                  status: 'Closing Soon',
-                  ctc: '12.0 LPA',
-                  location: 'Chennai',
-                  deadline: 'Aug 20, 2026'
-                },
-                { 
-                  company: 'Freshworks', 
-                  icon: 'https://img.shields.io/badge/Freshworks-FF5C36?style=for-the-badge&logo=freshworks&logoColor=white',
-                  role: 'Frontend Developer Intern', 
-                  status: 'Open',
-                  ctc: '₹30,000 / month',
-                  location: 'Chennai',
-                  deadline: 'Sep 5, 2026'
-                }
-              ].map((drive, index) => (
-                <motion.div
-                  key={index}
-                  className={`p-6 rounded-2xl border space-y-4 ${
-                    theme === 'dark' 
-                      ? 'bg-[#0A0A0E] border-white/10 hover:border-[#6366F1]/30' 
-                      : 'bg-white border-gray-200 hover:border-[#6366F1]/30'
-                  } transition-all duration-300 hover:shadow-lg`}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                >
-                  <div className="flex items-start gap-4">
-                    <img 
-                      src={drive.icon} 
-                      alt={drive.company}
-                      className="w-14 h-14 rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <h3 className={`font-bold text-lg ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>{drive.company}</h3>
-                      <p className={`text-sm font-medium ${
-                        theme === 'dark' ? 'text-[#A855F7]' : 'text-[#6366F1]'
-                      }`}>{drive.role}</p>
-                      <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold ${
-                        drive.status === 'Open' 
-                          ? (theme === 'dark' ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-[#10B981]/10 text-[#10B981]')
-                          : (theme === 'dark' ? 'bg-[#F59E0B]/10 text-[#F59E0B]' : 'bg-[#F59E0B]/10 text-[#F59E0B]')
-                      }`}>
-                        {drive.status}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className={`pt-4 border-t ${
-                    theme === 'dark' ? 'border-white/10' : 'border-gray-200'
-                  }`}>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>CTC</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>{drive.ctc}</p>
-                      </div>
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Location</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>{drive.location}</p>
-                      </div>
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Deadline</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>{drive.deadline}</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="text-center space-y-4 mb-8">
+              <p className={`text-sm ${
+                theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+              }`}>
+                Placement drives will be displayed here once colleges are onboarded and companies start recruitment.
+              </p>
+              <p className={`text-xs ${
+                theme === 'dark' ? 'text-[#888]' : 'text-gray-500'
+              }`}>
+                Currently building partnerships with companies for campus recruitment.
+              </p>
             </div>
           </motion.div>
 
@@ -2649,105 +2549,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               }`}>Placement Success Stories</h2>
               <p className={`text-sm ${
                 theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-              }`}>Students who transformed their careers through LearnIT programs</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { 
-                  name: 'Arun Kumar', 
-                  college: 'SRM University',
-                  placedAt: 'Microsoft',
-                  package: '24.5 LPA',
-                  role: 'SDE',
-                  image: 'AK',
-                  testimonial: 'The industry-aligned curriculum and mentorship prepared me perfectly for the Microsoft interview process.'
-                },
-                { 
-                  name: 'Priya Sharma', 
-                  college: 'VIT Vellore',
-                  placedAt: 'Amazon',
-                  package: '22.0 LPA',
-                  role: 'SDE Intern',
-                  image: 'PS',
-                  testimonial: 'LearnIT gave me the confidence and technical skills to crack one of the most competitive placements.'
-                },
-                { 
-                  name: 'Rahul Menon', 
-                  college: 'SASTRA University',
-                  placedAt: 'Zoho',
-                  package: '12.0 LPA',
-                  role: 'Software Developer',
-                  image: 'RM',
-                  testimonial: 'The practical projects and real-world exposure made all the difference in my placement journey.'
-                }
-              ].map((story, index) => (
-                <motion.div
-                  key={index}
-                  className={`p-6 rounded-2xl border space-y-4 ${
-                    theme === 'dark' 
-                      ? 'bg-[#0A0A0E] border-white/10 hover:border-[#10B981]/30' 
-                      : 'bg-white border-gray-200 hover:border-[#10B981]/30'
-                  } transition-all duration-300 hover:shadow-lg`}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
-                      theme === 'dark' 
-                        ? 'bg-[#6366F1]/20 text-[#6366F1]' 
-                        : 'bg-[#6366F1]/10 text-[#6366F1]'
-                    }`}>
-                      {story.image}
-                    </div>
-                    <div>
-                      <h3 className={`font-bold text-sm ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>{story.name}</h3>
-                      <p className={`text-xs ${
-                        theme === 'dark' ? 'text-[#CCC]' : 'text-gray-600'
-                      }`}>{story.college}</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`pt-4 border-t space-y-2 ${
-                    theme === 'dark' ? 'border-white/10' : 'border-gray-200'
-                  }`}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Placed at</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>{story.placedAt}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Package</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
-                        }`}>{story.package}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                        theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                      }`}>Role</p>
-                      <p className={`text-sm font-medium ${
-                        theme === 'dark' ? 'text-[#A855F7]' : 'text-[#6366F1]'
-                      }`}>{story.role}</p>
-                    </div>
-                  </div>
-                  
-                  <p className={`text-xs italic ${
-                    theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-                  }`}>"{story.testimonial}"</p>
-                </motion.div>
-              ))}
+              }`}>Success stories will be featured here as students get placed through our platform.</p>
             </div>
           </motion.div>
         </section>
