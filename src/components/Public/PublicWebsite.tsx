@@ -110,7 +110,7 @@ const programsList: Program[] = [
     duration: '6 Months (400 Hours)',
     mode: 'Hybrid (Campus + Live LMS)',
     eligibility: 'B.Tech / B.E. / MCA (3rd & 4th Year)',
-    avgPackage: '5.5 - 6.5 LPA',
+    avgPackage: '3.0 - 6.5 LPA',
     icon: <Code className="w-5 h-5 text-[#6366F1]" />,
     outcomes: ['Build scalable React/TypeScript apps', 'Architect RESTful & GraphQL microservices', 'CI/CD deployment on AWS Cloud'],
     modules: [
@@ -129,7 +129,7 @@ const programsList: Program[] = [
     duration: '5 Months (350 Hours)',
     mode: 'Live Interactive Sessions',
     eligibility: 'Engineering & Science Graduates',
-    avgPackage: '6.0 - 7.5 LPA',
+    avgPackage: '4.0 - 6.5 LPA',
     icon: <Sparkles className="w-5 h-5 text-[#A855F7]" />,
     outcomes: ['Deploy LLM & GenAI apps', 'Master Python Data Science stack', 'Build real-time streaming pipelines'],
     modules: [
@@ -148,7 +148,7 @@ const programsList: Program[] = [
     duration: '4 Months (300 Hours)',
     mode: 'Online + Hands-on Labs',
     eligibility: 'CSE / IT / ECE Students',
-    avgPackage: '5.0 - 6.5 LPA',
+    avgPackage: '3.5 - 6.0 LPA',
     icon: <ShieldCheck className="w-5 h-5 text-[#10B981]" />,
     outcomes: ['AWS & Azure Cloud Certified skills', 'Automate Kubernetes clusters', 'Implement Zero Trust security'],
     modules: [
@@ -156,25 +156,6 @@ const programsList: Program[] = [
       { title: 'Docker & Kubernetes Mastery', desc: 'Containerization, Helm Charts, Cluster Orchestration', hours: '75 Hours' },
       { title: 'Infrastructure as Code', desc: 'Terraform, Ansible, CI/CD Pipeline Automation', hours: '75 Hours' },
       { title: 'Ethical Hacking & DevSecOps', desc: 'OWASP Top 10, Penetration Testing, IAM Policies', hours: '75 Hours' }
-    ]
-  },
-  {
-    id: 'prog-4',
-    category: 'Management',
-    title: 'Tech Product Management & Business Analytics',
-    level: 'Intermediate',
-    description: 'Bridge software engineering with strategic product delivery, agile roadmapping, data analytics, and user growth.',
-    duration: '4 Months (250 Hours)',
-    mode: 'Weekend Masterclasses',
-    eligibility: 'MBA / Final Year Engineering',
-    avgPackage: '6.0 - 8.0 LPA',
-    icon: <BarChart3 className="w-5 h-5 text-[#F59E0B]" />,
-    outcomes: ['Product Requirement Documents (PRDs)', 'SQL & PowerBI analytics', 'Agile Scrum leadership'],
-    modules: [
-      { title: 'Product Discovery & Strategy', desc: 'User Research, Competitor Analysis, Wireframing', hours: '60 Hours' },
-      { title: 'UX Metrics & Data Analytics', desc: 'SQL, Mixpanel, A/B Testing, Funnel Analytics', hours: '65 Hours' },
-      { title: 'Agile & Jira Workflows', desc: 'Sprint Planning, Backlog Refinement, Release Management', hours: '60 Hours' },
-      { title: 'Go-To-Market Execution', desc: 'Growth Marketing, Product Monetization, Pitching', hours: '65 Hours' }
     ]
   }
 ];
@@ -2056,12 +2037,13 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             >
               Executive Leadership Team
             </motion.h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
               {[
                 { name: 'Shiva', role: 'Chief Executive Officer', ex: 'Visionary Leader & Tech Strategist' },
                 { name: 'Suresh', role: 'Chief Operating Officer', ex: 'Leads operational strategy, business coordination and organizational execution' },
                 { name: 'Vijay', role: 'Head of Placement Operations', ex: 'Focuses on placement coordination, employer engagement and career-readiness initiatives' },
-                { name: 'Mohan Ram', role: 'Chief Technology Officer', ex: 'Drives technology strategy, platform development and digital innovation' }
+                { name: 'Mohan Ram', role: 'Chief Technology Officer', ex: 'Drives technology strategy, platform development and digital innovation' },
+                { name: 'Vayuputra', role: 'Head of Strategic Partnerships', ex: 'Manages corporate relationships, institutional partnerships and business development initiatives' }
               ].map((m, i) => (
                 <motion.div 
                   key={i} 
@@ -2322,7 +2304,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#F59E0B]' : 'text-[#F59E0B]'
-              }`}>6.5 LPA</div>
+              }`}>4.5 LPA</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
               }`}>Average Package</div>
@@ -2348,20 +2330,127 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               </p>
             </div>
 
-            {/* Partnership Overview - Statistics */}
+            {/* Hiring Partners Grid */}
             <motion.div 
-              className={`p-6 rounded-2xl border text-center ${
-                theme === 'dark' ? 'bg-[#0A0A0E] border-white/10' : 'bg-white border-gray-200'
-              }`}
+              className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+              <div className={`p-6 rounded-2xl border text-center ${
+                theme === 'dark' ? 'bg-[#0A0A0E] border-white/10' : 'bg-white border-gray-200'
               }`}>
-                Partnership statistics will be displayed here once approved by Super Admin.
-              </p>
+                <div className={`text-4xl font-bold mb-2 ${
+                  theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
+                }`}>8+</div>
+                <p className={`text-sm font-semibold ${
+                  theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                }`}>Active Hiring Partners</p>
+                <p className={`text-xs mt-2 ${
+                  theme === 'dark' ? 'text-[#888]' : 'text-gray-500'
+                }`}>Average Package: 3.0 - 6.5 LPA</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { 
+                    name: 'Infosight Consulting', 
+                    type: 'IT Consulting & Services',
+                    packages: '3.5 - 6.5 LPA',
+                    roles: 'Software Engineer, Consultant',
+                    color: '#6366F1'
+                  },
+                  { 
+                    name: 'Shreegenix Intelligence Solution', 
+                    type: 'AI & Data Analytics',
+                    packages: '4.0 - 6.0 LPA',
+                    roles: 'Data Analyst, ML Engineer',
+                    color: '#A855F7'
+                  },
+                  { 
+                    name: 'Infosight AI', 
+                    type: 'Artificial Intelligence',
+                    packages: '4.5 - 6.5 LPA',
+                    roles: 'AI Developer, Research Engineer',
+                    color: '#10B981'
+                  },
+                  { 
+                    name: 'Tech Partner 4', 
+                    type: 'Software Development',
+                    packages: '3.0 - 5.5 LPA',
+                    roles: 'Full Stack Developer',
+                    color: '#F59E0B'
+                  },
+                  { 
+                    name: 'Tech Partner 5', 
+                    type: 'Cloud Services',
+                    packages: '3.5 - 6.0 LPA',
+                    roles: 'DevOps Engineer',
+                    color: '#EF4444'
+                  },
+                  { 
+                    name: 'Tech Partner 6', 
+                    type: 'Product Development',
+                    packages: '4.0 - 6.5 LPA',
+                    roles: 'Software Engineer',
+                    color: '#8B5CF6'
+                  }
+                ].map((partner, index) => (
+                  <motion.div
+                    key={index}
+                    className={`p-6 rounded-2xl border space-y-4 ${
+                      theme === 'dark' 
+                        ? 'bg-[#0A0A0E] border-white/10 hover:border-[#6366F1]/30' 
+                        : 'bg-white border-gray-200 hover:border-[#6366F1]/30'
+                    } transition-all duration-300 hover:shadow-lg`}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.1 * index }}
+                    whileHover={{ scale: 1.02, y: -4 }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div 
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg`}
+                        style={{ 
+                          backgroundColor: theme === 'dark' ? `${partner.color}20` : `${partner.color}10`,
+                          color: partner.color
+                        }}
+                      >
+                        {partner.name.charAt(0)}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className={`font-bold text-sm ${
+                          theme === 'dark' ? 'text-white' : 'text-gray-900'
+                        }`}>{partner.name}</h3>
+                        <p className={`text-xs ${
+                          theme === 'dark' ? 'text-[#A855F7]' : 'text-[#6366F1]'
+                        }`}>{partner.type}</p>
+                      </div>
+                    </div>
+                    
+                    <div className={`pt-4 border-t space-y-3 ${
+                      theme === 'dark' ? 'border-white/10' : 'border-gray-200'
+                    }`}>
+                      <div>
+                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
+                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
+                        }`}>Package Range</p>
+                        <p className={`text-sm font-bold ${
+                          theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
+                        }`}>{partner.packages}</p>
+                      </div>
+                      <div>
+                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
+                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
+                        }`}>Open Roles</p>
+                        <p className={`text-xs ${
+                          theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
+                        }`}>{partner.roles}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
             {/* Partnership Benefits */}
@@ -3311,7 +3400,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>Training Tracks</h5>
             <ul className="space-y-2">
-              {['Full-Stack Software Engineering', 'Applied AI & Data Science', 'Cloud DevOps Architecture', 'Tech Product Management'].map((track, i) => (
+              {['Full-Stack Software Engineering', 'Applied AI & Data Science', 'Cloud DevOps Architecture'].map((track, i) => (
                 <motion.li 
                   key={i}
                   whileHover={{ x: 5 }}
