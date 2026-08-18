@@ -157,6 +157,25 @@ const programsList: Program[] = [
       { title: 'Infrastructure as Code', desc: 'Terraform, Ansible, CI/CD Pipeline Automation', hours: '75 Hours' },
       { title: 'Ethical Hacking & DevSecOps', desc: 'OWASP Top 10, Penetration Testing, IAM Policies', hours: '75 Hours' }
     ]
+  },
+  {
+    id: 'prog-4',
+    category: 'Web Development',
+    title: 'Modern Web Development & UI/UX Design',
+    level: 'Beginner to Intermediate',
+    description: 'Master responsive web design, modern JavaScript frameworks, and create stunning user interfaces with industry-standard tools.',
+    duration: '3 Months (200 Hours)',
+    mode: 'Online Live Classes',
+    eligibility: 'All Engineering Students',
+    avgPackage: '3.0 - 5.5 LPA',
+    icon: <Laptop className="w-5 h-5 text-[#F59E0B]" />,
+    outcomes: ['Build responsive websites', 'Master React & modern JavaScript', 'Design beautiful UI/UX'],
+    modules: [
+      { title: 'Web Fundamentals', desc: 'HTML5, CSS3, JavaScript ES6+, Responsive Design', hours: '50 Hours' },
+      { title: 'React & Modern Frameworks', desc: 'React.js, Component Design, State Management, Hooks', hours: '60 Hours' },
+      { title: 'UI/UX Design Principles', desc: 'Figma, Design Systems, User Experience, Accessibility', hours: '45 Hours' },
+      { title: 'Full-Stack Integration', desc: 'REST APIs, Firebase, Deployment, Version Control', hours: '45 Hours' }
+    ]
   }
 ];
 
@@ -2304,7 +2323,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#F59E0B]' : 'text-[#F59E0B]'
-              }`}>4.5 LPA</div>
+              }`}>3.5 LPA</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
               }`}>Average Package</div>
@@ -2373,27 +2392,6 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                     packages: '4.5 - 6.5 LPA',
                     roles: 'AI Developer, Research Engineer',
                     color: '#10B981'
-                  },
-                  { 
-                    name: 'Tech Partner 4', 
-                    type: 'Software Development',
-                    packages: '3.0 - 5.5 LPA',
-                    roles: 'Full Stack Developer',
-                    color: '#F59E0B'
-                  },
-                  { 
-                    name: 'Tech Partner 5', 
-                    type: 'Cloud Services',
-                    packages: '3.5 - 6.0 LPA',
-                    roles: 'DevOps Engineer',
-                    color: '#EF4444'
-                  },
-                  { 
-                    name: 'Tech Partner 6', 
-                    type: 'Product Development',
-                    packages: '4.0 - 6.5 LPA',
-                    roles: 'Software Engineer',
-                    color: '#8B5CF6'
                   }
                 ].map((partner, index) => (
                   <motion.div
@@ -3400,7 +3398,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>Training Tracks</h5>
             <ul className="space-y-2">
-              {['Full-Stack Software Engineering', 'Applied AI & Data Science', 'Cloud DevOps Architecture'].map((track, i) => (
+              {['Full-Stack Software Engineering', 'Applied AI & Data Science', 'Cloud DevOps Architecture', 'Modern Web Development'].map((track, i) => (
                 <motion.li 
                   key={i}
                   whileHover={{ x: 5 }}
