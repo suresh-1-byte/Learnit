@@ -22,7 +22,9 @@ export const mockUserProfiles: Record<string, UserProfile> = {
     email: 'sarah.chen@learnit.com',
     role: 'super_admin',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-    title: 'Chief Technology Officer'
+    title: 'Chief Technology Officer',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   college_admin: {
     id: 'user_002',
@@ -32,7 +34,9 @@ export const mockUserProfiles: Record<string, UserProfile> = {
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80',
     collegeId: 'clg_001',
     collegeName: "St. Xavier's Institute of Technology",
-    title: 'Dean of Engineering'
+    title: 'Dean of Engineering',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   mentor: {
     id: 'user_003',
@@ -42,7 +46,9 @@ export const mockUserProfiles: Record<string, UserProfile> = {
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80',
     collegeId: 'clg_001',
     collegeName: "St. Xavier's Institute of Technology",
-    title: 'Senior AI/ML Mentor'
+    title: 'Senior AI/ML Mentor',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   student: {
     id: 'user_004',
@@ -54,7 +60,10 @@ export const mockUserProfiles: Record<string, UserProfile> = {
     collegeName: "St. Xavier's Institute of Technology",
     departmentId: 'dept_001',
     departmentName: 'Computer Science Engineering',
-    title: 'Final Year Student'
+    title: 'Final Year Student',
+    classId: 'class_001', // Added for student materials/assignments access
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 };
 

@@ -158,7 +158,7 @@ export const getAttendanceByStudent = async (
     const records: AttendanceRecord[] = [];
     
     querySnapshot.forEach((doc) => {
-      const data = doc.data();
+      const data = doc.data() as any;
       records.push({
         id: doc.id,
         ...data,

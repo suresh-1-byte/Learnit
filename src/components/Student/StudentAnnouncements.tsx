@@ -136,7 +136,7 @@ export const StudentAnnouncements: React.FC = () => {
                   
                   <p className={`text-sm mb-3 ${
                     theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                  }`}>{announcement.content}</p>
+                  }`}>{announcement.body}</p>
                   
                   <div className={`flex items-center gap-4 text-xs ${
                     theme === 'dark' ? 'text-[#666]' : 'text-gray-500'

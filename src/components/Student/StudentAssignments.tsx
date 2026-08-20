@@ -19,8 +19,8 @@ export const StudentAssignments: React.FC = () => {
   const { theme } = useTheme();
   const { userProfile } = useAuth();
   
-  // Get student's class ID (you may need to adjust based on your user profile structure)
-  const studentClassId = userProfile?.classIds?.[0] || userProfile?.classId || '';
+  // Get student's class ID
+  const studentClassId = userProfile?.classId || userProfile?.batchId || '';
   
   const {
     assignments,

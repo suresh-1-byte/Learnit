@@ -11,6 +11,8 @@ export interface UserProfile {
   collegeName?: string;
   departmentId?: string;
   departmentName?: string;
+  classId?: string; // For students - their assigned class/batch
+  batchId?: string; // Alternative field name for class
   title?: string;
   phone?: string;
   qualifications?: string;

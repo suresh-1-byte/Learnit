@@ -45,7 +45,7 @@ export const useAnnouncements = (classId?: string) => {
       
       if (userProfile.role === 'student') {
         // For students, get announcements based on their classes
-        const classIds = [userProfile.batchId || '']; // Assuming batchId is the classId
+        const classIds = [userProfile.classId || userProfile.batchId || ''];
         fetchedAnnouncements = await getAnnouncementsByStudent(userProfile.id, classIds);
       } else if (classId) {
         // For mentors viewing a specific class
@@ -68,7 +68,7 @@ export const useAnnouncements = (classId?: string) => {
     if (!userProfile?.id || userProfile.role !== 'student') return;
     
     try {
-      const classIds = [userProfile.batchId || ''];
+      const classIds = [userProfile.classId || userProfile.batchId || ''];
       const count = await getUnreadAnnouncementsCount(userProfile.id, classIds);
       setUnreadCount(count);
     } catch (err: any) {

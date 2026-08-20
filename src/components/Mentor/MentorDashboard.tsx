@@ -174,7 +174,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   const {
     announcements: firebaseAnnouncements,
     loading: announcementsLoading,
-    createAnnouncement
+    addAnnouncement
   } = useAnnouncements();
   
   // Use Firebase announcements or fallback to mock
@@ -502,7 +502,10 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
         type: newMatType as 'Video' | 'PDF' | 'Code Sandbox' | 'Slides',
         description: newMatDesc || '',
         classId: selectedClass?.id || classes[0]?.id || 'default-class',
+        className: selectedClass?.name || classes[0]?.name || 'General',
         mentorId: userProfile.id,
+        mentorName: userProfile.displayName || userProfile.name || 'Mentor',
+        uploadedAt: new Date().toISOString(),
         tags: []
       };
 
@@ -514,30 +517,40 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
       setNewMatDesc('');
       setNewMatFile(null);
       setNewMatUrl('');
+      
+      alert('Material uploaded successfully!');
     } catch (error) {
       console.error('Failed to upload material:', error);
       alert('Failed to upload material. Please try again.');
     }
   };
 
-  const handleCreateAnnouncement = (e: React.FormEvent) => {
+  const handleCreateAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAnnTitle) return;
+    if (!newAnnTitle || !userProfile) return;
 
-    const newAnn = {
-      id: `ann_${Date.now()}`,
-      title: newAnnTitle,
-      body: newAnnBody,
-      targetBatch: 'All Assigned Batches',
-      priority: 'High',
-      date: new Date().toISOString().split('T')[0],
-      author: mentorProfile.name
-    };
+    try {
+      const announcementData = {
+        title: newAnnTitle,
+        message: newAnnBody,
+        mentorId: userProfile.id,
+        mentorName: userProfile.displayName || userProfile.name || 'Mentor',
+        classId: selectedClass?.id || classes[0]?.id || 'default-class',
+        priority: 'High' as 'High' | 'Medium' | 'Low'
+      };
 
-    setAnnouncements([newAnn, ...announcements]);
-    setShowCreateAnnouncementModal(false);
-    setNewAnnTitle('');
-    setNewAnnBody('');
+      await addAnnouncement(announcementData);
+      
+      // Reset form
+      setShowCreateAnnouncementModal(false);
+      setNewAnnTitle('');
+      setNewAnnBody('');
+      
+      alert('Announcement created successfully!');
+    } catch (error) {
+      console.error('Failed to create announcement:', error);
+      alert('Failed to create announcement. Please try again.');
+    }
   };
 
   const handleCreateClass = async (e: React.FormEvent) => {
