@@ -53,20 +53,34 @@ export const createStudent = async (
 };
 
 /**
- * Get all students
+ * Get all students (from users collection with role='student')
  */
 export const getAllStudents = async (): Promise<Student[]> => {
   try {
-    const querySnapshot = await getDocs(collection(db, STUDENTS_COLLECTION));
+    // Query users collection where role = 'student'
+    const q = query(
+      collection(db, 'users'),
+      where('role', '==', 'student')
+    );
+    
+    const querySnapshot = await getDocs(q);
     const students: Student[] = [];
     
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       students.push({
         id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
+        name: data.name || '',
+        email: data.email || '',
+        rollNumber: data.rollNumber || '',
+        avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+        departmentName: data.departmentName || '',
+        phone: data.phone || '',
+        batchName: data.batchName || '',
+        programTitle: data.programTitle || 'General Program',
+        classIds: data.classIds || data.classId ? [data.classId] : [],
+        createdAt: data.createdAt || new Date().toISOString(),
+        updatedAt: data.updatedAt || new Date().toISOString()
       } as Student);
     });
     
@@ -78,13 +92,13 @@ export const getAllStudents = async (): Promise<Student[]> => {
 };
 
 /**
- * Get students by class ID
+ * Get students by class ID (from users collection)
  */
 export const getStudentsByClass = async (classId: string): Promise<Student[]> => {
   try {
     const q = query(
-      collection(db, STUDENTS_COLLECTION),
-      where('classIds', 'array-contains', classId)
+      collection(db, 'users'),
+      where('role', '==', 'student')
     );
     
     const querySnapshot = await getDocs(q);
@@ -92,12 +106,25 @@ export const getStudentsByClass = async (classId: string): Promise<Student[]> =>
     
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      students.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Student);
+      const classIds = data.classIds || (data.classId ? [data.classId] : []);
+      
+      // Filter by classId
+      if (classIds.includes(classId)) {
+        students.push({
+          id: doc.id,
+          name: data.name || '',
+          email: data.email || '',
+          rollNumber: data.rollNumber || '',
+          avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+          departmentName: data.departmentName || '',
+          phone: data.phone || '',
+          batchName: data.batchName || '',
+          programTitle: data.programTitle || 'General Program',
+          classIds: classIds,
+          createdAt: data.createdAt || new Date().toISOString(),
+          updatedAt: data.updatedAt || new Date().toISOString()
+        } as Student);
+      }
     });
     
     return students;
@@ -108,20 +135,28 @@ export const getStudentsByClass = async (classId: string): Promise<Student[]> =>
 };
 
 /**
- * Get student by ID
+ * Get student by ID (from users collection)
  */
 export const getStudentById = async (studentId: string): Promise<Student | null> => {
   try {
-    const docRef = doc(db, STUDENTS_COLLECTION, studentId);
+    const docRef = doc(db, 'users', studentId);
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
       const data = docSnap.data();
       return {
         id: docSnap.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
+        name: data.name || '',
+        email: data.email || '',
+        rollNumber: data.rollNumber || '',
+        avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+        departmentName: data.departmentName || '',
+        phone: data.phone || '',
+        batchName: data.batchName || '',
+        programTitle: data.programTitle || 'General Program',
+        classIds: data.classIds || (data.classId ? [data.classId] : []),
+        createdAt: data.createdAt || new Date().toISOString(),
+        updatedAt: data.updatedAt || new Date().toISOString()
       } as Student;
     }
     
@@ -133,17 +168,17 @@ export const getStudentById = async (studentId: string): Promise<Student | null>
 };
 
 /**
- * Update student
+ * Update student (in users collection)
  */
 export const updateStudent = async (
   studentId: string,
   updates: Partial<Student>
 ): Promise<void> => {
   try {
-    const docRef = doc(db, STUDENTS_COLLECTION, studentId);
+    const docRef = doc(db, 'users', studentId);
     await updateDoc(docRef, {
       ...updates,
-      updatedAt: serverTimestamp()
+      updatedAt: new Date().toISOString()
     });
   } catch (error) {
     console.error('Error updating student:', error);
@@ -152,11 +187,11 @@ export const updateStudent = async (
 };
 
 /**
- * Delete student
+ * Delete student (from users collection)
  */
 export const deleteStudent = async (studentId: string): Promise<void> => {
   try {
-    await deleteDoc(doc(db, STUDENTS_COLLECTION, studentId));
+    await deleteDoc(doc(db, 'users', studentId));
   } catch (error) {
     console.error('Error deleting student:', error);
     throw error;
@@ -171,12 +206,19 @@ export const assignStudentToClass = async (
   classId: string
 ): Promise<void> => {
   try {
-    const student = await getStudentById(studentId);
-    if (!student) throw new Error('Student not found');
+    const docRef = doc(db, 'users', studentId);
+    const docSnap = await getDoc(docRef);
     
-    if (!student.classIds.includes(classId)) {
-      await updateStudent(studentId, {
-        classIds: [...student.classIds, classId]
+    if (!docSnap.exists()) throw new Error('Student not found');
+    
+    const data = docSnap.data();
+    const currentClassIds = data.classIds || (data.classId ? [data.classId] : []);
+    
+    if (!currentClassIds.includes(classId)) {
+      await updateDoc(docRef, {
+        classIds: [...currentClassIds, classId],
+        classId: classId, // Also set primary classId
+        updatedAt: new Date().toISOString()
       });
     }
   } catch (error) {
