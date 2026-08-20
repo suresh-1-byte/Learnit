@@ -22,6 +22,12 @@ export const StudentAssignments: React.FC = () => {
   // Get student's class ID
   const studentClassId = userProfile?.classId || userProfile?.batchId || '';
   
+  // Debug logging
+  React.useEffect(() => {
+    console.log('StudentAssignments - userProfile:', userProfile);
+    console.log('StudentAssignments - studentClassId:', studentClassId);
+  }, [userProfile, studentClassId]);
+  
   const {
     assignments,
     loading: assignmentsLoading,

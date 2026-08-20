@@ -175,28 +175,64 @@ export const getAssignmentsByMentor = async (mentorId: string): Promise<Assignme
  */
 export const getAssignmentsByClass = async (classId: string): Promise<Assignment[]> => {
   try {
-    const q = query(
-      collection(db, ASSIGNMENTS_COLLECTION),
-      where('classId', '==', classId),
-      orderBy('dueDate', 'desc')
-    );
+    console.log('getAssignmentsByClass called with classId:', classId);
     
-    const querySnapshot = await getDocs(q);
-    const assignments: Assignment[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      assignments.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Assignment);
-    });
-    
-    return assignments;
-  } catch (error) {
+    // Try with orderBy first
+    try {
+      const q = query(
+        collection(db, ASSIGNMENTS_COLLECTION),
+        where('classId', '==', classId),
+        orderBy('dueDate', 'desc')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const assignments: Assignment[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        assignments.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Assignment);
+      });
+      
+      console.log('Successfully fetched assignments with orderBy:', assignments.length);
+      return assignments;
+    } catch (indexError: any) {
+      // If index error, try without orderBy and sort in memory
+      console.warn('Index error, trying without orderBy:', indexError.message);
+      
+      const q = query(
+        collection(db, ASSIGNMENTS_COLLECTION),
+        where('classId', '==', classId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const assignments: Assignment[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        assignments.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Assignment);
+      });
+      
+      // Sort in memory
+      assignments.sort((a, b) => 
+        new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()
+      );
+      
+      console.log('Successfully fetched assignments without orderBy:', assignments.length);
+      return assignments;
+    }
+  } catch (error: any) {
     console.error('Error getting class assignments:', error);
+    console.error('Full error:', error);
     throw error;
   }
 };

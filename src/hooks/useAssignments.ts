@@ -60,15 +60,23 @@ export const useAssignments = (classId?: string) => {
    * Fetch assignments for a specific class
    */
   const fetchClassAssignments = async (classId: string) => {
+    if (!classId) {
+      console.log('No classId provided, skipping fetch');
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
       setError(null);
       console.log('Fetching assignments for class:', classId);
       const fetchedAssignments = await getAssignmentsByClass(classId);
       console.log('Fetched class assignments:', fetchedAssignments);
+      console.log('Number of assignments:', fetchedAssignments.length);
       setAssignments(fetchedAssignments);
     } catch (err: any) {
       console.error('Error fetching class assignments:', err);
+      console.error('Full error details:', err);
       setError(err.message || 'Failed to fetch class assignments');
     } finally {
       setLoading(false);
