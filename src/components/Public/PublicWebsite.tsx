@@ -76,7 +76,7 @@ interface PublicWebsiteProps {
 
 interface Program {
   id: string;
-  category: 'Full-Stack' | 'AI & Data' | 'Cloud & Security' | 'Management';
+  category: 'AI & Data' | 'Cloud & DevOps' | 'Frontend' | 'Backend';
   title: string;
   level: 'Beginner to Advanced' | 'Intermediate' | 'Advanced Track';
   description: string;
@@ -85,7 +85,13 @@ interface Program {
   eligibility: string;
   avgPackage: string;
   outcomes: string[];
-  modules: { title: string; desc: string; hours: string }[];
+  phases: { 
+    name: string; 
+    topics: string[]; 
+    tools: string[]; 
+    phaseProject: string;
+  }[];
+  capstone: string;
   icon: React.ReactNode;
 }
 
@@ -103,79 +109,159 @@ interface Article {
 const programsList: Program[] = [
   {
     id: 'prog-1',
-    category: 'Full-Stack',
-    title: 'Enterprise Full-Stack Software Engineering',
+    category: 'AI & Data',
+    title: 'AI & Machine Learning',
     level: 'Beginner to Advanced',
-    description: 'Comprehensive React, Node.js, Microservices, and Cloud Architecture track tailored for tier-1 IT product firms.',
-    duration: '6 Months (400 Hours)',
+    description: 'Master artificial intelligence and machine learning from foundations to deployment. Build intelligent systems using Python, deep learning frameworks, and generative AI technologies.',
+    duration: '6 Months',
     mode: 'Hybrid (Campus + Live LMS)',
     eligibility: 'B.Tech / B.E. / MCA (3rd & 4th Year)',
-    avgPackage: '3.0 - 6.5 LPA',
-    icon: <Code className="w-5 h-5 text-[#6366F1]" />,
-    outcomes: ['Build scalable React/TypeScript apps', 'Architect RESTful & GraphQL microservices', 'CI/CD deployment on AWS Cloud'],
-    modules: [
-      { title: 'Modern Web Architecture', desc: 'HTML5, Tailwind CSS, TypeScript, React 18, State Management', hours: '80 Hours' },
-      { title: 'Distributed Systems & Express', desc: 'Node.js, Express, REST APIs, GraphQL, Microservices', hours: '100 Hours' },
-      { title: 'PostgreSQL & System Design', desc: 'Relational DBs, ORMs, Redis Caching, High Availability', hours: '100 Hours' },
-      { title: 'DevOps & Containerization', desc: 'Docker, Kubernetes, AWS ECS, GitHub Actions CI/CD', hours: '120 Hours' }
-    ]
+    avgPackage: '4.0 - 6.5 LPA',
+    icon: <Sparkles className="w-5 h-5 text-[#A855F7]" />,
+    outcomes: [
+      'Build ML models with Python and Scikit-learn',
+      'Develop deep learning applications with PyTorch',
+      'Deploy GenAI solutions with LLMs and RAG architecture',
+      'Create end-to-end AI pipelines from data to production'
+    ],
+    phases: [
+      {
+        name: 'Phase 1: Foundations & Data Science',
+        topics: ['Python Programming', 'NumPy & Pandas', 'Data Visualization', 'SQL for Analytics', 'Statistics & Probability', 'Exploratory Data Analysis'],
+        tools: ['Python', 'Jupyter', 'NumPy', 'Pandas', 'Matplotlib', 'Seaborn', 'SQL'],
+        phaseProject: 'Sales Data Analysis Dashboard with predictive insights'
+      },
+      {
+        name: 'Phase 2: Machine Learning & Deep Learning',
+        topics: ['Supervised Learning', 'Classification & Regression', 'Model Evaluation', 'Neural Networks', 'CNNs for Computer Vision', 'RNNs & LSTMs', 'Transfer Learning'],
+        tools: ['Scikit-learn', 'PyTorch', 'TensorFlow', 'Keras', 'OpenCV'],
+        phaseProject: 'Image Classification System using CNNs'
+      },
+      {
+        name: 'Phase 3: GenAI & Deployment',
+        topics: ['Large Language Models', 'Prompt Engineering', 'RAG Architecture', 'Vector Databases', 'Model Deployment', 'MLOps Basics', 'API Integration'],
+        tools: ['OpenAI API', 'LangChain', 'Pinecone', 'Hugging Face', 'FastAPI', 'Docker'],
+        phaseProject: 'Intelligent Chatbot with RAG implementation'
+      }
+    ],
+    capstone: 'End-to-End AI Solution: Build a complete AI application combining ML models, deep learning, and GenAI features with deployment pipeline'
   },
   {
     id: 'prog-2',
-    category: 'AI & Data',
-    title: 'Applied AI, Machine Learning & Data Engineering',
-    level: 'Advanced Track',
-    description: 'Hands-on AI model deployment, Generative AI integration, Python data pipelines, and Neural Network fine-tuning.',
-    duration: '5 Months (350 Hours)',
+    category: 'Cloud & DevOps',
+    title: 'DevOps & Cloud Engineering',
+    level: 'Intermediate',
+    description: 'Transform into a DevOps engineer with expertise in Linux, cloud infrastructure, containerization, and CI/CD automation. Master modern deployment practices and cloud-native technologies.',
+    duration: '5 Months',
     mode: 'Live Interactive Sessions',
-    eligibility: 'Engineering & Science Graduates',
-    avgPackage: '4.0 - 6.5 LPA',
-    icon: <Sparkles className="w-5 h-5 text-[#A855F7]" />,
-    outcomes: ['Deploy LLM & GenAI apps', 'Master Python Data Science stack', 'Build real-time streaming pipelines'],
-    modules: [
-      { title: 'Python & Exploratory Data Analysis', desc: 'NumPy, Pandas, Matplotlib, SQL for Analytics', hours: '70 Hours' },
-      { title: 'Machine Learning Algorithms', desc: 'Scikit-Learn, Regression, Classification, Model Evaluation', hours: '90 Hours' },
-      { title: 'Deep Learning & PyTorch', desc: 'Neural Networks, CNNs, RNNs, Computer Vision', hours: '90 Hours' },
-      { title: 'GenAI & Big Data Pipelines', desc: 'LLM Prompting, RAG Architecture, Apache Spark, Kafka', hours: '100 Hours' }
-    ]
+    eligibility: 'B.Tech / B.E. / MCA (3rd & 4th Year)',
+    avgPackage: '3.5 - 6.0 LPA',
+    icon: <ShieldCheck className="w-5 h-5 text-[#10B981]" />,
+    outcomes: [
+      'Master Linux system administration and networking',
+      'Deploy applications using Docker and Kubernetes',
+      'Build automated CI/CD pipelines',
+      'Manage cloud infrastructure on AWS/Azure'
+    ],
+    phases: [
+      {
+        name: 'Phase 1: Linux & Networking Fundamentals',
+        topics: ['Linux Commands & Shell Scripting', 'File Systems & Permissions', 'Process Management', 'Network Protocols', 'DNS & Load Balancing', 'Security Basics'],
+        tools: ['Linux', 'Bash', 'SSH', 'Vim', 'Git', 'Network Tools'],
+        phaseProject: 'Automated Server Setup & Monitoring Script'
+      },
+      {
+        name: 'Phase 2: Containers & Orchestration',
+        topics: ['Docker Fundamentals', 'Container Images & Registry', 'Docker Compose', 'Kubernetes Architecture', 'Pods & Deployments', 'Services & Ingress', 'ConfigMaps & Secrets'],
+        tools: ['Docker', 'Docker Hub', 'Kubernetes', 'Helm', 'kubectl'],
+        phaseProject: 'Microservices Deployment on Kubernetes Cluster'
+      },
+      {
+        name: 'Phase 3: CI/CD & Cloud Infrastructure',
+        topics: ['Jenkins Pipeline', 'GitHub Actions', 'AWS EC2 & S3', 'VPC & IAM', 'Terraform Basics', 'Infrastructure as Code', 'Monitoring & Logging'],
+        tools: ['Jenkins', 'GitHub Actions', 'AWS', 'Terraform', 'Ansible', 'Prometheus', 'Grafana'],
+        phaseProject: 'Automated Deployment Pipeline with Infrastructure as Code'
+      }
+    ],
+    capstone: 'Complete DevOps Pipeline: Build a full CI/CD pipeline deploying containerized microservices to cloud with automated testing, monitoring, and scaling'
   },
   {
     id: 'prog-3',
-    category: 'Cloud & Security',
-    title: 'Cloud DevOps Architecture & Cybersecurity',
-    level: 'Intermediate',
-    description: 'Infrastructure as Code, Kubernetes orchestration, DevSecOps compliance, and enterprise penetration testing.',
-    duration: '4 Months (300 Hours)',
-    mode: 'Online + Hands-on Labs',
-    eligibility: 'CSE / IT / ECE Students',
-    avgPackage: '3.5 - 6.0 LPA',
-    icon: <ShieldCheck className="w-5 h-5 text-[#10B981]" />,
-    outcomes: ['AWS & Azure Cloud Certified skills', 'Automate Kubernetes clusters', 'Implement Zero Trust security'],
-    modules: [
-      { title: 'AWS Cloud Architecture', desc: 'EC2, S3, VPC, IAM, Lambda, CloudWatch', hours: '75 Hours' },
-      { title: 'Docker & Kubernetes Mastery', desc: 'Containerization, Helm Charts, Cluster Orchestration', hours: '75 Hours' },
-      { title: 'Infrastructure as Code', desc: 'Terraform, Ansible, CI/CD Pipeline Automation', hours: '75 Hours' },
-      { title: 'Ethical Hacking & DevSecOps', desc: 'OWASP Top 10, Penetration Testing, IAM Policies', hours: '75 Hours' }
-    ]
-  },
-  {
-    id: 'prog-4',
-    category: 'Web Development',
-    title: 'Modern Web Development & UI/UX Design',
-    level: 'Beginner to Intermediate',
-    description: 'Master responsive web design, modern JavaScript frameworks, and create stunning user interfaces with industry-standard tools.',
-    duration: '3 Months (200 Hours)',
-    mode: 'Online Live Classes',
+    category: 'Frontend',
+    title: 'Frontend Development — Design & Dev',
+    level: 'Beginner to Advanced',
+    description: 'Become a complete frontend developer mastering web fundamentals, modern React development, and professional UI/UX design. Build responsive, accessible, and performant web applications.',
+    duration: '5 Months',
+    mode: 'Hybrid (Campus + Live LMS)',
     eligibility: 'All Engineering Students',
     avgPackage: '3.0 - 5.5 LPA',
     icon: <Laptop className="w-5 h-5 text-[#F59E0B]" />,
-    outcomes: ['Build responsive websites', 'Master React & modern JavaScript', 'Design beautiful UI/UX'],
-    modules: [
-      { title: 'Web Fundamentals', desc: 'HTML5, CSS3, JavaScript ES6+, Responsive Design', hours: '50 Hours' },
-      { title: 'React & Modern Frameworks', desc: 'React.js, Component Design, State Management, Hooks', hours: '60 Hours' },
-      { title: 'UI/UX Design Principles', desc: 'Figma, Design Systems, User Experience, Accessibility', hours: '45 Hours' },
-      { title: 'Full-Stack Integration', desc: 'REST APIs, Firebase, Deployment, Version Control', hours: '45 Hours' }
-    ]
+    outcomes: [
+      'Build responsive websites with HTML, CSS, and JavaScript',
+      'Develop modern React applications with hooks and state management',
+      'Design beautiful UI/UX with Figma and design systems',
+      'Create full-stack features with API integration'
+    ],
+    phases: [
+      {
+        name: 'Phase 1: Web & Design Foundations',
+        topics: ['HTML5 Semantic Markup', 'CSS3 & Flexbox/Grid', 'Responsive Design', 'JavaScript ES6+', 'DOM Manipulation', 'Figma Basics', 'Design Principles'],
+        tools: ['HTML', 'CSS', 'JavaScript', 'Figma', 'Chrome DevTools', 'Git'],
+        phaseProject: 'Responsive Portfolio Website with interactive UI'
+      },
+      {
+        name: 'Phase 2: React & Component Architecture',
+        topics: ['React Components', 'JSX & Props', 'State & Hooks', 'React Router', 'Context API', 'Custom Hooks', 'Component Libraries', 'Tailwind CSS'],
+        tools: ['React', 'Vite', 'React Router', 'Tailwind CSS', 'Lucide Icons', 'npm'],
+        phaseProject: 'Task Management App with React and API integration'
+      },
+      {
+        name: 'Phase 3: Full-Stack Integration & Testing',
+        topics: ['REST API Integration', 'Authentication Flow', 'Firebase Integration', 'State Management', 'Form Validation', 'Performance Optimization', 'Testing Basics', 'Deployment'],
+        tools: ['Firebase', 'Axios', 'React Query', 'Vercel', 'Netlify', 'ESLint'],
+        phaseProject: 'E-commerce Frontend with Firebase backend'
+      }
+    ],
+    capstone: 'Production-Ready Web Application: Build a complete full-stack web app with authentication, real-time features, responsive design, and cloud deployment'
+  },
+  {
+    id: 'prog-4',
+    category: 'Backend',
+    title: 'Backend Development — Python',
+    level: 'Beginner to Advanced',
+    description: 'Master backend development with Python, from core programming to building scalable APIs and deploying production systems. Learn database design, REST APIs, and cloud deployment.',
+    duration: '5 Months',
+    mode: 'Live Interactive Sessions',
+    eligibility: 'B.Tech / B.E. / MCA (3rd & 4th Year)',
+    avgPackage: '3.5 - 6.0 LPA',
+    icon: <Code className="w-5 h-5 text-[#6366F1]" />,
+    outcomes: [
+      'Write clean Python code with OOP principles',
+      'Build RESTful APIs with Django and FastAPI',
+      'Design and optimize database schemas',
+      'Deploy scalable backend systems to production'
+    ],
+    phases: [
+      {
+        name: 'Phase 1: Python & Object-Oriented Programming',
+        topics: ['Python Fundamentals', 'Data Structures', 'Functions & Modules', 'OOP Concepts', 'Classes & Objects', 'Inheritance & Polymorphism', 'File Handling', 'Exception Handling'],
+        tools: ['Python', 'PyCharm', 'Jupyter', 'Git', 'Virtual Environments'],
+        phaseProject: 'Library Management System with OOP design'
+      },
+      {
+        name: 'Phase 2: Web Frameworks & APIs',
+        topics: ['Django Framework', 'Models & ORM', 'REST API Design', 'Authentication & Authorization', 'FastAPI Basics', 'API Documentation', 'Postman Testing'],
+        tools: ['Django', 'Django REST Framework', 'FastAPI', 'PostgreSQL', 'Postman', 'Swagger'],
+        phaseProject: 'RESTful Blog API with user authentication'
+      },
+      {
+        name: 'Phase 3: Databases, Scale & Deployment',
+        topics: ['Database Design', 'SQL Optimization', 'Redis Caching', 'Async Programming', 'Background Tasks', 'Docker Deployment', 'AWS Basics', 'Performance Tuning'],
+        tools: ['PostgreSQL', 'MongoDB', 'Redis', 'Celery', 'Docker', 'AWS', 'Gunicorn', 'Nginx'],
+        phaseProject: 'Scalable API Service with caching and async tasks'
+      }
+    ],
+    capstone: 'Enterprise Backend System: Build a complete backend application with multiple microservices, database optimization, caching, and production deployment on cloud'
   }
 ];
 
@@ -199,7 +285,7 @@ const articlesList: Article[] = [
     category: 'Platform Development',
     readTime: '4 min read',
     date: 'Jul 28, 2026',
-    author: 'Vikram Mehta (Chief Technology Officer)',
+    author: 'Mohan Ram (Chief Technology Officer)',
     summary: "A look into LearnIT's future technical capabilities including intelligent attendance systems and predictive student success models.",
     content: 'We are developing advanced QR-based attendance with geofencing capabilities to streamline campus operations. Future releases will include AI-driven student performance prediction, automated assignment grading, and comprehensive learning management tools. Our technical roadmap includes building scalable cloud infrastructure to support thousands of colleges simultaneously with real-time data synchronization.'
   },
@@ -209,7 +295,7 @@ const articlesList: Article[] = [
     category: 'Future Initiatives',
     readTime: '6 min read',
     date: 'Jul 15, 2026',
-    author: 'Priya Sundaram (Head of Placement Operations)',
+    author: 'Vijay (Head of Placement Operations)',
     summary: 'How LearnIT plans to revolutionize campus placements by connecting students directly with top tech companies.',
     content: 'We envision a future where every college using LearnIT gains direct access to corporate recruitment drives. Our planned placement portal will enable students to showcase verified skills through blockchain certificates, participate in company-specific hiring challenges, and access personalized interview preparation. We\'re working to build partnerships with leading tech firms to create a seamless campus-to-career pipeline for engineering graduates across India.'
   }
@@ -229,7 +315,7 @@ const faqList = [
   {
     category: 'Placements',
     q: "What is the placement support mechanism?",
-    a: "Students who achieve 85%+ attendance and complete required capstone projects will gain access to corporate recruitment drives hosted on our platform."
+    a: "Students who achieve 90%+ attendance and complete required capstone projects will gain access to corporate recruitment drives hosted on our platform."
   },
   {
     category: 'Institutional ERP',
@@ -626,7 +712,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                Bridge Academic <br />
+                Bridging Academic Learning <br />
                 <motion.span 
                   className="bg-gradient-to-r from-[#6366F1] via-[#A855F7] to-[#10B981] bg-clip-text text-transparent"
                   animate={{ 
@@ -639,7 +725,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                   }}
                   style={{ backgroundSize: '200% 100%' }}
                 >
-                  Learning & Industry.
+                  with Industry Readiness.
                 </motion.span>
               </motion.h1>
 
@@ -651,7 +737,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Connect colleges, students, and mentors through industry-aligned programs, hands-on projects, performance tracking, and placement readiness — all on one comprehensive platform.
+                LearnIT aims to become India's most trusted industry-academia platform, empowering every student with future-ready skills, real-world experience, and meaningful career opportunities by creating a strong bridge between academic education and industry.
               </motion.p>
 
               <motion.div 
@@ -1589,18 +1675,17 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               <p className={`text-xs sm:text-sm max-w-xl mx-auto ${
                 theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
               }`}>
-                6 structured milestones converting campus students into hired software engineers.
+                5 structured milestones converting campus students into hired software engineers.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
               {[
                 { step: '01', title: 'Register', desc: 'Onboarding & skill diagnostic test', icon: <Compass className="w-5 h-5 text-[#6366F1]" />, color: '#6366F1' },
                 { step: '02', title: 'Training', desc: 'Comprehensive live masterclasses', icon: <BookOpen className="w-5 h-5 text-[#A855F7]" />, color: '#A855F7' },
                 { step: '03', title: 'Projects', desc: 'Real-world capstone GitHub repos', icon: <Code className="w-5 h-5 text-[#10B981]" />, color: '#10B981' },
                 { step: '04', title: 'Assessment', desc: 'Mock interviews & coding evaluations', icon: <Target className="w-5 h-5 text-[#F59E0B]" />, color: '#F59E0B' },
-                { step: '05', title: 'Certification', desc: 'Tamper-proof QR transcript badge', icon: <Award className="w-5 h-5 text-[#3B82F6]" />, color: '#3B82F6' },
-                { step: '06', title: 'Placement', desc: 'Direct corporate campus drives', icon: <Briefcase className="w-5 h-5 text-[#10B981]" />, color: '#10B981' },
+                { step: '05', title: 'Placement', desc: 'Direct corporate campus drives', icon: <Briefcase className="w-5 h-5 text-[#10B981]" />, color: '#10B981' },
               ].map((m, i) => (
                 <motion.div 
                   key={i} 
@@ -1965,7 +2050,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             <p className={`text-sm max-w-2xl mx-auto leading-relaxed ${
               theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
             }`}>
-              LearnIT was founded with a singular mission: to eliminate the disconnect between university engineering education and high-growth corporate technology roles.
+              LearnIT acts as a bridge between academic education and industry readiness, transforming the way colleges deliver practical, career-focused learning to prepare students for real-world success.
             </p>
           </motion.div>
 
@@ -1979,13 +2064,13 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             {[
               { 
                 title: 'Our Mission', 
-                desc: 'To equip every engineering student with verified, real-world software development skills and direct access to top corporate hiring partners.',
+                desc: 'To empower students through industry-aligned training, hands-on projects, internships, mentorship, and placement assistance while partnering with colleges to build a highly employable workforce. We deliver practical skill development, career guidance, and continuous upskilling aligned with emerging technologies to strengthen industry-academia engagement.',
                 icon: <Target className="w-5 h-5" />,
                 color: '#6366F1'
               },
               { 
                 title: 'Our Vision', 
-                desc: 'To become the universal SaaS operating system for technical higher education, connecting colleges, students, and industry partners.',
+                desc: 'To become India\'s most trusted industry-academia platform, bridging the gap between education and employment by empowering every student with future-ready skills, real-world experience, and the confidence to succeed in the global workforce.',
                 icon: <Compass className="w-5 h-5" />,
                 color: '#A855F7'
               },
@@ -2142,7 +2227,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="flex flex-wrap gap-2">
-              {['All', 'Full-Stack', 'AI & Data', 'Cloud & Security', 'Management'].map((cat) => (
+              {['All', 'AI & Data', 'Cloud & DevOps', 'Frontend', 'Backend'].map((cat) => (
                 <motion.button
                   key={cat}
                   onClick={() => setProgramCategory(cat)}
@@ -2323,10 +2408,10 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <div className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-[#F59E0B]' : 'text-[#F59E0B]'
-              }`}>3.5 LPA</div>
+              }`}>₹3–6 LPA</div>
               <div className={`text-xs font-semibold ${
                 theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-              }`}>Average Package</div>
+              }`}>Package Range</div>
             </div>
           </motion.div>
 
@@ -2364,34 +2449,38 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 }`}>8+</div>
                 <p className={`text-sm font-semibold ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                }`}>Active Hiring Partners</p>
+                }`}>Hiring Partners</p>
                 <p className={`text-xs mt-2 ${
                   theme === 'dark' ? 'text-[#888]' : 'text-gray-500'
-                }`}>Average Package: 3.0 - 6.5 LPA</p>
+                }`}>Building partnerships with leading companies</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   { 
                     name: 'Infosight Consulting', 
                     type: 'IT Consulting & Services',
-                    packages: '3.5 - 6.5 LPA',
-                    roles: 'Software Engineer, Consultant',
+                    status: 'Hiring Partner',
                     color: '#6366F1'
                   },
                   { 
                     name: 'Shreegenix Intelligence Solution', 
                     type: 'AI & Data Analytics',
-                    packages: '4.0 - 6.0 LPA',
-                    roles: 'Data Analyst, ML Engineer',
+                    status: 'Hiring Partner',
                     color: '#A855F7'
                   },
                   { 
                     name: 'Infosight AI', 
                     type: 'Artificial Intelligence',
-                    packages: '4.5 - 6.5 LPA',
-                    roles: 'AI Developer, Research Engineer',
+                    status: 'Hiring Partner',
                     color: '#10B981'
+                  },
+                  { 
+                    name: 'Partner Company 4', 
+                    type: 'Technology Services',
+                    status: 'Partnership Pending',
+                    color: '#F59E0B',
+                    placeholder: true
                   }
                 ].map((partner, index) => (
                   <motion.div
@@ -2426,24 +2515,15 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                       </div>
                     </div>
                     
-                    <div className={`pt-4 border-t space-y-3 ${
+                    <div className={`pt-4 border-t ${
                       theme === 'dark' ? 'border-white/10' : 'border-gray-200'
                     }`}>
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Package Range</p>
-                        <p className={`text-sm font-bold ${
-                          theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
-                        }`}>{partner.packages}</p>
-                      </div>
-                      <div>
-                        <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-                          theme === 'dark' ? 'text-[#AAA]' : 'text-gray-500'
-                        }`}>Open Roles</p>
-                        <p className={`text-xs ${
-                          theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-                        }`}>{partner.roles}</p>
+                      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold ${
+                        partner.placeholder
+                          ? theme === 'dark' ? 'bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20' : 'bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20'
+                          : theme === 'dark' ? 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20' : 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20'
+                      }`}>
+                        {partner.status}
                       </div>
                     </div>
                   </motion.div>
@@ -2955,7 +3035,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                   theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
                 }`}>
                   <p className="flex items-start gap-3"><MapPin className="w-4 h-4 text-[#6366F1] mt-0.5 flex-shrink-0" /> <span>No. 10, Park Road, 2nd Street<br />Maduravoyal<br />Chennai, Tamil Nadu - 600095<br />India</span></p>
-                  <p className="flex items-center gap-3"><Phone className="w-4 h-4 text-[#10B981]" /> +91 7200575426</p>
+                  <p className="flex items-center gap-3"><Phone className="w-4 h-4 text-[#10B981]" /> +91 7200574426</p>
                   <p className="flex items-center gap-3"><Mail className="w-4 h-4 text-[#A855F7]" /> zentrix.coo@gmail.com</p>
                   <p className="flex items-center gap-3"><Clock className="w-4 h-4 text-[#F59E0B]" /> 9:00 AM – 5:00 PM</p>
                 </div>
@@ -3124,14 +3204,15 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
 
       {/* PROGRAM DETAILS MODAL */}
       {selectedProgram && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className={`border rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-6 ${
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className={`border rounded-2xl max-w-2xl w-full my-8 shadow-2xl ${
             theme === 'dark' 
               ? 'bg-[#0A0A0E] border-white/15' 
               : 'bg-white border-gray-200'
           }`}>
-            <div className={`flex items-center justify-between pb-4 border-b ${
-              theme === 'dark' ? 'border-white/10' : 'border-gray-200'
+            {/* Fixed Header with Close Button */}
+            <div className={`sticky top-0 z-10 flex items-center justify-between p-6 pb-4 border-b ${
+              theme === 'dark' ? 'bg-[#0A0A0E] border-white/10' : 'bg-white border-gray-200'
             }`}>
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#A855F7]">{selectedProgram.category}</span>
@@ -3139,68 +3220,145 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>{selectedProgram.title}</h3>
               </div>
-              <button onClick={() => setSelectedProgram(null)} className={`p-1 ${
-                theme === 'dark' ? 'text-[#AAA] hover:text-white' : 'text-gray-600 hover:text-gray-900'
-              }`}>
+              <button 
+                onClick={() => setSelectedProgram(null)} 
+                className={`p-2 rounded-lg hover:bg-white/10 transition-colors ${
+                  theme === 'dark' ? 'text-[#AAA] hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className={`text-xs leading-relaxed ${
-              theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-            }`}>{selectedProgram.description}</p>
+            {/* Scrollable Content */}
+            <div className="p-6 space-y-6 max-h-[65vh] overflow-y-auto">
+              <p className={`text-xs leading-relaxed ${
+                theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
+              }`}>{selectedProgram.description}</p>
 
-            <div className={`grid grid-cols-2 gap-4 text-xs p-4 rounded-xl border ${
-              theme === 'dark' 
-                ? 'bg-[#050505] border-white/10' 
-                : 'bg-gray-50 border-gray-200'
-            }`}>
-              <div>
-                <span className={`block ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                }`}>Duration</span>
-                <strong className={`font-mono ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>{selectedProgram.duration}</strong>
+              <div className={`grid grid-cols-2 gap-4 text-xs p-4 rounded-xl border ${
+                theme === 'dark' 
+                  ? 'bg-[#050505] border-white/10' 
+                  : 'bg-gray-50 border-gray-200'
+              }`}>
+                <div>
+                  <span className={`block ${
+                    theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                  }`}>Duration</span>
+                  <strong className={`font-mono ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>{selectedProgram.duration}</strong>
+                </div>
+                <div>
+                  <span className={`block ${
+                    theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                  }`}>Target CTC Range</span>
+                  <strong className="text-[#10B981] font-mono">{selectedProgram.avgPackage}</strong>
+                </div>
               </div>
-              <div>
-                <span className={`block ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-                }`}>Target CTC Range</span>
-                <strong className="text-[#10B981] font-mono">{selectedProgram.avgPackage}</strong>
-              </div>
-            </div>
 
-            <div className="space-y-3">
-              <h4 className={`font-bold text-xs uppercase tracking-wider ${
-                theme === 'dark' ? 'text-white text-[#CCC]' : 'text-gray-900 text-gray-700'
-              }`}>Curriculum Modules</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                {selectedProgram.modules.map((m, idx) => (
-                  <div key={idx} className={`p-3 rounded-xl border space-y-1 ${
-                    theme === 'dark' 
-                      ? 'bg-[#111] border-white/5' 
-                      : 'bg-gray-50 border-gray-200'
-                  }`}>
-                    <p className={`font-bold flex items-center gap-1.5 ${
+              <div className="space-y-3">
+                <h4 className={`font-bold text-xs uppercase tracking-wider ${
+                  theme === 'dark' ? 'text-white text-[#CCC]' : 'text-gray-900 text-gray-700'
+                }`}>Curriculum Structure</h4>
+                <div className="space-y-4">
+                  {selectedProgram.phases.map((phase, idx) => (
+                    <div key={idx} className={`p-4 rounded-xl border space-y-3 ${
+                      theme === 'dark' 
+                        ? 'bg-[#111] border-white/10' 
+                        : 'bg-gray-50 border-gray-200'
+                    }`}>
+                      <div className={`font-bold text-sm flex items-center gap-2 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>
+                        <div className="w-6 h-6 rounded-full bg-[#6366F1] text-white flex items-center justify-center text-xs font-bold">
+                          {idx + 1}
+                        </div>
+                        {phase.name}
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div>
+                          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${
+                            theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                          }`}>Topics Covered</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {phase.topics.map((topic, topicIdx) => (
+                              <span key={topicIdx} className={`text-[10px] px-2 py-1 rounded-lg ${
+                                theme === 'dark' 
+                                  ? 'bg-[#0A0A0E] text-[#CCC] border border-white/5' 
+                                  : 'bg-white text-gray-700 border border-gray-300'
+                              }`}>
+                                {topic}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${
+                            theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                          }`}>Tools & Technologies</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {phase.tools.map((tool, toolIdx) => (
+                              <span key={toolIdx} className={`text-[10px] px-2 py-1 rounded-lg flex items-center gap-1 ${
+                                theme === 'dark' 
+                                  ? 'bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20' 
+                                  : 'bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/30'
+                              }`}>
+                                <CheckCircle2 className="w-2.5 h-2.5" />
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className={`pt-2 mt-2 border-t ${
+                          theme === 'dark' ? 'border-white/5' : 'border-gray-300'
+                        }`}>
+                          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${
+                            theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
+                          }`}>Phase Project</p>
+                          <p className={`text-xs flex items-start gap-1.5 ${
+                            theme === 'dark' ? 'text-[#A855F7]' : 'text-[#A855F7]'
+                          }`}>
+                            <Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                            {phase.phaseProject}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className={`p-4 rounded-xl border mt-4 ${
+                  theme === 'dark' 
+                    ? 'bg-gradient-to-br from-[#6366F1]/10 to-[#A855F7]/10 border-[#6366F1]/30' 
+                    : 'bg-gradient-to-br from-[#6366F1]/10 to-[#A855F7]/10 border-[#6366F1]/30'
+                }`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#6366F1] to-[#A855F7] text-white flex items-center justify-center">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <p className={`text-sm font-bold ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}><CheckCircle2 className="w-3.5 h-3.5 text-[#6366F1]" /> {m.title}</p>
-                    <p className={`text-[11px] ${
-                      theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
-                    }`}>{m.desc}</p>
-                    <p className="text-[10px] font-mono text-[#A855F7]">{m.hours}</p>
+                    }`}>Final Capstone Project</p>
                   </div>
-                ))}
+                  <p className={`text-xs ${
+                    theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
+                  }`}>{selectedProgram.capstone}</p>
+                </div>
               </div>
             </div>
 
-            <div className={`flex justify-end gap-3 pt-4 border-t ${
-              theme === 'dark' ? 'border-white/10' : 'border-gray-200'
+            {/* Fixed Footer with Buttons */}
+            <div className={`sticky bottom-0 flex justify-end gap-3 p-6 pt-4 border-t ${
+              theme === 'dark' ? 'bg-[#0A0A0E] border-white/10' : 'bg-white border-gray-200'
             }`}>
               <button onClick={() => setSelectedProgram(null)} className={`px-4 py-2 rounded-xl text-xs font-semibold ${
                 theme === 'dark' 
-                  ? 'bg-[#1A1A1A] text-white' 
-                  : 'bg-gray-100 text-gray-900'
+                  ? 'bg-[#1A1A1A] text-white hover:bg-[#222]' 
+                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
               }`}>
                 Close
               </button>
@@ -3430,13 +3588,15 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             }`}>
               <span className={`block ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>LearnIT HQ Tower</span>
-              <span className="block">Bangalore Tech Park, KA 560103</span>
+              }`}>Zentrix</span>
+              <span className="block">No. 10, Park Road, 2nd Street</span>
+              <span className="block">Maduravoyal, Chennai</span>
+              <span className="block">Tamil Nadu - 600095, India</span>
               <motion.span 
                 className="block text-[#6366F1] cursor-pointer"
                 whileHover={{ scale: 1.05 }}
               >
-                partnerships@learnit.edu
+                zentrix.coo@gmail.com
               </motion.span>
             </p>
           </motion.div>
