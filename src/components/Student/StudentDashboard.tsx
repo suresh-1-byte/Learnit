@@ -34,6 +34,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useMaterials } from '../../hooks/useMaterials';
 import { StudentAssignments } from './StudentAssignments';
+import { StudentAttendance } from './StudentAttendance';
 import {
   WelcomeBanner,
   AnalyticsCards,
@@ -498,115 +499,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   /* ========================================================================== */
   /* 4. ATTENDANCE                                                              */
   /* ========================================================================== */
-  const renderAttendanceView = () => (
-    <div className={`rounded-2xl border p-6 space-y-6 transition-all duration-250 shadow-lg ${
-      theme === 'dark' 
-        ? 'bg-[#0A0A0E] border-[rgba(255,255,255,0.08)]' 
-        : 'bg-white border-[rgba(0,0,0,0.06)]'
-    }`}>
-      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b transition-colors duration-250 ${
-        theme === 'dark' ? 'border-[rgba(255,255,255,0.08)]' : 'border-[rgba(0,0,0,0.06)]'
-      }`}>
-        <div>
-          <h2 className={`text-lg font-bold ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Attendance Analytics & History</h2>
-          <p className={`text-xs ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>Official college attendance record (Read-Only Security Rule enforced)</p>
-        </div>
-        <div className="text-right">
-          <span className={`text-[10px] uppercase block font-bold ${
-            theme === 'dark' ? 'text-[#666]' : 'text-[#64748B]'
-          }`}>Overall Attendance</span>
-          <strong className="text-xl text-[#10B981] font-mono">{student.attendancePct}%</strong>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className={`p-4 rounded-2xl border ${
-          theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
-        }`}>
-          <span className={`text-xs uppercase font-bold block ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>July 2026 Monthly</span>
-          <div className={`text-lg font-bold font-mono mt-1 ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>
-            {studentAttendanceRecords.filter(r => r.date.startsWith('2026-07')).length > 0 
-              ? `${Math.round((studentAttendanceRecords.filter(r => r.date.startsWith('2026-07') && r.status === 'Present').length / studentAttendanceRecords.filter(r => r.date.startsWith('2026-07')).length) * 100)}% (${studentAttendanceRecords.filter(r => r.date.startsWith('2026-07') && r.status === 'Present').length}/${studentAttendanceRecords.filter(r => r.date.startsWith('2026-07')).length} Days)`
-              : 'No Data'
-            }
-          </div>
-        </div>
-        <div className={`p-4 rounded-2xl border ${
-          theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
-        }`}>
-          <span className={`text-xs uppercase font-bold block ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>June 2026 Monthly</span>
-          <div className={`text-lg font-bold font-mono mt-1 ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>
-            {studentAttendanceRecords.filter(r => r.date.startsWith('2026-06')).length > 0
-              ? `${Math.round((studentAttendanceRecords.filter(r => r.date.startsWith('2026-06') && r.status === 'Present').length / studentAttendanceRecords.filter(r => r.date.startsWith('2026-06')).length) * 100)}% (${studentAttendanceRecords.filter(r => r.date.startsWith('2026-06') && r.status === 'Present').length}/${studentAttendanceRecords.filter(r => r.date.startsWith('2026-06')).length} Days)`
-              : 'No Data'
-            }
-          </div>
-        </div>
-        <div className={`p-4 rounded-2xl border ${
-          theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
-        }`}>
-          <span className={`text-xs uppercase font-bold block ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>Overall Attendance</span>
-          <div className="text-lg font-bold text-[#10B981] font-mono mt-1">{student.attendancePct}% Attendance</div>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <h3 className={`font-bold text-sm ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>Recent Attendance Verification Log</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className={`border-b text-[10px] font-bold uppercase tracking-[0.15em] ${
-                theme === 'dark' 
-                  ? 'border-[#1A1A1A] text-[#555] bg-[#080808]' 
-                  : 'border-gray-200 text-gray-500 bg-gray-50'
-              }`}>
-                <th className="py-3 px-4">Date</th>
-                <th className="py-3 px-4">Subject Topic</th>
-                <th className="py-3 px-4">Verification Mode</th>
-                <th className="py-3 px-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className={`divide-y ${
-              theme === 'dark' ? 'divide-[#141414]' : 'divide-gray-200'
-            }`}>
-              {studentAttendanceRecords.slice(0, 5).map((record, idx) => (
-                <tr key={idx} className={`transition-colors ${
-                  theme === 'dark' ? 'hover:bg-[#111]' : 'hover:bg-gray-50'
-                }`}>
-                  <td className={`py-3 px-4 font-mono ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>{record.date}</td>
-                  <td className={`py-3 px-4 ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>Class Session</td>
-                  <td className={`py-3 px-4 ${
-                    theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                  }`}>QR Geofence Scan</td>
-                  <td className="py-3 px-4 font-bold text-[#10B981]">{record.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
+  const renderAttendanceView = () => <StudentAttendance />;
 
   /* ========================================================================== */
   /* 5. ASSIGNMENTS - FULLY INTEGRATED WITH FIREBASE                           */
