@@ -16,7 +16,7 @@ import { useAssignments } from '../../hooks/useAssignments';
 import { useAnnouncements } from '../../hooks/useAnnouncements';
 import { useMaterials } from '../../hooks/useMaterials';
 import { useVideos } from '../../hooks/useVideos';
-import { getStudentsByClass } from '../../services/firebase/students.service';
+import { getStudentsByClass, updateStudent } from '../../services/firebase/students.service';
 import { AnalyticsBI } from '../Analytics/AnalyticsBI';
 import { AssignmentsManager } from './AssignmentsManager';
 import { AttendanceManager } from './AttendanceManager';
@@ -123,6 +123,33 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
     } catch (error) {
       console.error('Error loading students:', error);
       setStudentsList([]);
+    }
+  };
+
+  // Load all students when Students tab is active
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [loadingAllStudents, setLoadingAllStudents] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'students') {
+      loadAllStudents();
+    }
+  }, [activeTab]);
+
+  const loadAllStudents = async () => {
+    try {
+      setLoadingAllStudents(true);
+      const { getAllStudents } = await import('../../services/firebase/students.service');
+      const students = await getAllStudents();
+      setAllStudents(students.map(s => ({
+        ...s,
+        attendancePct: 85 // Mock for now, will calculate later
+      })) as any);
+    } catch (error) {
+      console.error('Error loading all students:', error);
+      setAllStudents([]);
+    } finally {
+      setLoadingAllStudents(false);
     }
   };
   
@@ -1683,7 +1710,8 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   /* 4. STUDENTS DIRECTORY & PROFILE MODAL                                     */
   /* -------------------------------------------------------------------------- */
   const renderStudentsView = () => {
-    const filteredStudents = studentsList.filter(s => {
+    // Use allStudents for the Students tab instead of studentsList (which is for attendance)
+    const filteredStudents = allStudents.filter(s => {
       const matchSearch = s.name.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
                           s.rollNumber.toLowerCase().includes(studentSearchTerm.toLowerCase());
       return matchSearch;
@@ -1707,7 +1735,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
             }`}>Detailed performance profiles across assigned training batches</p>
           </div>
           <span className="text-xs text-[#10B981] font-mono font-bold bg-[#10B981]/10 px-3 py-1 rounded-lg border border-[#10B981]/20">
-            195 Total Students
+            {loadingAllStudents ? 'Loading...' : `${allStudents.length} Total Students`}
           </span>
         </div>
 
@@ -1748,6 +1776,18 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
 
         {/* Students Table */}
         <div className="overflow-x-auto">
+          {loadingAllStudents ? (
+            <div className={`text-center py-12 ${theme === 'dark' ? 'text-[#888]' : 'text-gray-500'}`}>
+              <div className="animate-spin w-8 h-8 border-2 border-[#10B981] border-t-transparent rounded-full mx-auto mb-3"></div>
+              <p className="text-sm">Loading students from Firebase...</p>
+            </div>
+          ) : allStudents.length === 0 ? (
+            <div className={`text-center py-12 ${theme === 'dark' ? 'text-[#888]' : 'text-gray-500'}`}>
+              <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
+              <p className="text-sm font-semibold">No students found</p>
+              <p className="text-xs mt-1">Students will appear here once they sign up</p>
+            </div>
+          ) : (
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className={`border-b text-[10px] font-bold uppercase tracking-[0.15em] ${
@@ -1813,6 +1853,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
               ))}
             </tbody>
           </table>
+          )}
         </div>
 
         {/* Student Profile Modal */}
@@ -1883,7 +1924,61 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
 
               <div className="space-y-2 text-xs">
                 <h4 className={`font-bold uppercase text-[10px] tracking-wider ${
-                  theme === 'dark' ? 'text-white text-[#666]' : 'text-gray-900 text-[#64748B]'
+                  theme === 'dark' ? 'text-[#666]' : 'text-[#64748B]'
+                }`}>Assign to Class</h4>
+                <div className="flex gap-2">
+                  <select
+                    value={selectedStudentForProfile.classId || ''}
+                    onChange={async (e) => {
+                      const classId = e.target.value;
+                      if (classId && selectedStudentForProfile) {
+                        try {
+                          await updateStudent(selectedStudentForProfile.id, {
+                            classId: classId,
+                            classIds: [classId]
+                          });
+                          
+                          // Update local state
+                          setSelectedStudentForProfile({
+                            ...selectedStudentForProfile,
+                            classId: classId,
+                            classIds: [classId]
+                          });
+                          
+                          // Refresh student list
+                          loadAllStudents();
+                          
+                          alert('Student assigned to class successfully!');
+                        } catch (error) {
+                          console.error('Error assigning student to class:', error);
+                          alert('Failed to assign student to class');
+                        }
+                      }
+                    }}
+                    className={`flex-1 px-3 py-2 rounded-xl text-xs ${
+                      theme === 'dark' 
+                        ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                        : 'bg-gray-50 border-gray-300 text-gray-900'
+                    }`}
+                  >
+                    <option value="">Select a class...</option>
+                    {classes.map(cls => (
+                      <option key={cls.id} value={cls.id}>
+                        {cls.title} - {cls.batchName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {selectedStudentForProfile.classId && (
+                  <p className={`text-[10px] ${theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'}`}>
+                    ✓ Currently assigned to: {classes.find(c => c.id === selectedStudentForProfile.classId)?.title || 'Unknown Class'}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <h4 className={`font-bold uppercase text-[10px] tracking-wider ${
+                  theme === 'dark' ? 'text-[#666]' : 'text-[#64748B]'
                 }`}>Mentor Confidential Notes</h4>
                 <textarea
                   rows={3}

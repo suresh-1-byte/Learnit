@@ -53,20 +53,21 @@ export const createStudent = async (
 };
 
 /**
- * Get all students (from users collection with role='student')
+ * Get all students (from both users and students collections)
  */
 export const getAllStudents = async (): Promise<Student[]> => {
   try {
-    // Query users collection where role = 'student'
-    const q = query(
+    const students: Student[] = [];
+    
+    // Query 1: Get students from 'users' collection where role = 'student'
+    const usersQuery = query(
       collection(db, 'users'),
       where('role', '==', 'student')
     );
     
-    const querySnapshot = await getDocs(q);
-    const students: Student[] = [];
+    const usersSnapshot = await getDocs(usersQuery);
     
-    querySnapshot.forEach((doc) => {
+    usersSnapshot.forEach((doc) => {
       const data = doc.data();
       students.push({
         id: doc.id,
@@ -84,6 +85,30 @@ export const getAllStudents = async (): Promise<Student[]> => {
       } as Student);
     });
     
+    // Query 2: Also get students from 'students' collection
+    const studentsSnapshot = await getDocs(collection(db, 'students'));
+    
+    studentsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      // Only add if not already in the list (avoid duplicates)
+      if (!students.find(s => s.id === doc.id || s.email === data.email)) {
+        students.push({
+          id: doc.id,
+          name: data.name || '',
+          email: data.email || '',
+          rollNumber: data.rollNumber || '',
+          avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+          departmentName: data.departmentName || data.departmentName || '',
+          phone: data.phone || '',
+          batchName: data.batchName || data.batchName || '',
+          programTitle: data.programTitle || data.programTitle || 'General Program',
+          classIds: data.classIds || data.classId ? [data.classId] : [],
+          createdAt: data.createdAt || new Date().toISOString(),
+          updatedAt: data.updatedAt || new Date().toISOString()
+        } as Student);
+      }
+    });
+    
     return students;
   } catch (error) {
     console.error('Error getting students:', error);
@@ -92,24 +117,52 @@ export const getAllStudents = async (): Promise<Student[]> => {
 };
 
 /**
- * Get students by class ID (from users collection)
+ * Get students by class ID (from both users and students collections)
  */
 export const getStudentsByClass = async (classId: string): Promise<Student[]> => {
   try {
-    const q = query(
+    const students: Student[] = [];
+    
+    // Query 1: Get from users collection
+    const usersQuery = query(
       collection(db, 'users'),
       where('role', '==', 'student')
     );
     
-    const querySnapshot = await getDocs(q);
-    const students: Student[] = [];
+    const usersSnapshot = await getDocs(usersQuery);
     
-    querySnapshot.forEach((doc) => {
+    usersSnapshot.forEach((doc) => {
       const data = doc.data();
       const classIds = data.classIds || (data.classId ? [data.classId] : []);
       
       // Filter by classId
       if (classIds.includes(classId)) {
+        students.push({
+          id: doc.id,
+          name: data.name || '',
+          email: data.email || '',
+          rollNumber: data.rollNumber || '',
+          avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+          departmentName: data.departmentName || '',
+          phone: data.phone || '',
+          batchName: data.batchName || '',
+          programTitle: data.programTitle || 'General Program',
+          classIds: classIds,
+          createdAt: data.createdAt || new Date().toISOString(),
+          updatedAt: data.updatedAt || new Date().toISOString()
+        } as Student);
+      }
+    });
+    
+    // Query 2: Also check students collection
+    const studentsSnapshot = await getDocs(collection(db, 'students'));
+    
+    studentsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const classIds = data.classIds || (data.classId ? [data.classId] : []);
+      
+      // Filter by classId and avoid duplicates
+      if (classIds.includes(classId) && !students.find(s => s.id === doc.id || s.email === data.email)) {
         students.push({
           id: doc.id,
           name: data.name || '',
@@ -135,12 +188,35 @@ export const getStudentsByClass = async (classId: string): Promise<Student[]> =>
 };
 
 /**
- * Get student by ID (from users collection)
+ * Get student by ID (from both users and students collections)
  */
 export const getStudentById = async (studentId: string): Promise<Student | null> => {
   try {
-    const docRef = doc(db, 'users', studentId);
-    const docSnap = await getDoc(docRef);
+    // Try users collection first
+    let docRef = doc(db, 'users', studentId);
+    let docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        id: docSnap.id,
+        name: data.name || '',
+        email: data.email || '',
+        rollNumber: data.rollNumber || '',
+        avatar: data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`,
+        departmentName: data.departmentName || '',
+        phone: data.phone || '',
+        batchName: data.batchName || '',
+        programTitle: data.programTitle || 'General Program',
+        classIds: data.classIds || (data.classId ? [data.classId] : []),
+        createdAt: data.createdAt || new Date().toISOString(),
+        updatedAt: data.updatedAt || new Date().toISOString()
+      } as Student;
+    }
+    
+    // Try students collection if not found in users
+    docRef = doc(db, 'students', studentId);
+    docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
       const data = docSnap.data();

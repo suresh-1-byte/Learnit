@@ -1,0 +1,155 @@
+// StudentDashboard.tsx - PART 2: Dashboard Overview Rendering
+
+  // Dashboard Overview Tab
+  const renderDashboardView = () => (
+    <div className="space-y-6">
+      {/* Welcome Banner */}
+      <div className={`rounded-2xl p-6 border ${
+        theme === 'dark' ? 'bg-[#0A0A0E] border-[#1A1A1A]' : 'bg-white border-gray-200'
+      }`}>
+        <h1 className={`text-2xl font-bold ${
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        }`}>
+          Welcome back, {userProfile?.name}!
+        </h1>
+        <p className={`text-sm mt-1 ${
+          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+        }`}>
+          {studentClass ? studentClass.title : 'No class assigned yet'}
+        </p>
+      </div>
+
+      {/* Real Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className={`p-4 rounded-xl border ${
+          theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs uppercase tracking-wider ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>Total Assignments</p>
+              <p className={`text-2xl font-bold mt-1 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>{studentAssignments.length}</p>
+            </div>
+            <FileText className="w-8 h-8 text-blue-500" />
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-xl border ${
+          theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs uppercase tracking-wider ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>Pending</p>
+              <p className={`text-2xl font-bold mt-1 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>{pendingAssignments.length}</p>
+            </div>
+            <Clock className="w-8 h-8 text-orange-500" />
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-xl border ${
+          theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs uppercase tracking-wider ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>Attendance</p>
+              <p className={`text-2xl font-bold mt-1 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>{attendanceRate}%</p>
+            </div>
+            <CheckCircle className="w-8 h-8 text-green-500" />
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-xl border ${
+          theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs uppercase tracking-wider ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>Avg Score</p>
+              <p className={`text-2xl font-bold mt-1 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>{avgScore}%</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-purple-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Today's Schedule */}
+      <div className={`rounded-xl p-6 border ${
+        theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+      }`}>
+        <h3 className={`text-lg font-bold mb-4 ${
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        }`}>Today's Schedule</h3>
+        {studentClass ? (
+          <div className={`p-4 rounded-lg border ${
+            theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className={`font-semibold ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}>{studentClass.title}</h4>
+                <p className={`text-sm ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                }`}>
+                  {studentClass.schedule?.day} • {studentClass.schedule?.startTime} - {studentClass.schedule?.endTime}
+                </p>
+                <p className={`text-sm ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                }`}>Mentor: {studentClass.mentorName}</p>
+              </div>
+              <Calendar className="w-6 h-6 text-blue-500" />
+            </div>
+          </div>
+        ) : (
+          <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+            No class assigned yet
+          </p>
+        )}
+      </div>
+
+      {/* Recent Activity - Real Announcements */}
+      <div className={`rounded-xl p-6 border ${
+        theme === 'dark' ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-gray-200'
+      }`}>
+        <h3 className={`text-lg font-bold mb-4 ${
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        }`}>Recent Announcements</h3>
+        {studentAnnouncements.length === 0 ? (
+          <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+            No announcements yet
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {studentAnnouncements.slice(0, 3).map(announcement => (
+              <div key={announcement.id} className={`p-3 rounded-lg border ${
+                theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
+              }`}>
+                <h4 className={`font-semibold text-sm ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}>{announcement.title}</h4>
+                <p className={`text-xs mt-1 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                }`}>{announcement.message}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // CONTINUE IN PART 3...

@@ -1,0 +1,111 @@
+// StudentDashboard.tsx - PART 1: Imports and Setup
+// Replace the existing file with this new implementation
+
+import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAssignments } from '../../hooks/useAssignments';
+import { useAnnouncements } from '../../hooks/useAnnouncements';
+import { useAttendance } from '../../hooks/useAttendance';
+import { useClasses } from '../../hooks/useClasses';
+import { useMaterials } from '../../hooks/useMaterials';
+import { useVideos } from '../../hooks/useVideos';
+import { StudentAssignments } from './StudentAssignments';
+import { StudentAttendance } from './StudentAttendance';
+import {
+  BookOpen,
+  Calendar,
+  FileText,
+  Video,
+  Bell,
+  BarChart3,
+  User,
+  CheckCircle,
+  Clock,
+  TrendingUp
+} from 'lucide-react';
+
+interface StudentDashboardProps {
+  activeTab?: string;
+  onSelectTab?: (tabId: string) => void;
+}
+
+export const StudentDashboard: React.FC<StudentDashboardProps> = ({
+  activeTab = 'dashboard',
+  onSelectTab
+}) => {
+  const { theme } = useTheme();
+  const { userProfile } = useAuth();
+  const [currentTab, setCurrentTab] = useState(activeTab);
+
+  // Firebase Hooks - Load real data
+  const { assignments, submissions, loading: assignmentsLoading } = useAssignments();
+  const { classes, loading: classesLoading } = useClasses();
+  const { attendance, loading: attendanceLoading } = useAttendance(
+    userProfile?.classId || '',
+    new Date().toISOString().split('T')[0]
+  );
+  const { materials, loading: materialsLoading } = useMaterials();
+  const { videos, loading: videosLoading } = useVideos();
+  const { announcements, loading: announcementsLoading } = useAnnouncements();
+
+  // Filter data for current student
+  const studentAssignments = assignments.filter(a =>
+    userProfile?.classId && a.classId === userProfile.classId
+  );
+
+  const studentSubmissions = submissions.filter(s =>
+    s.studentId === userProfile?.id
+  );
+
+  const studentClass = classes.find(c => c.id === userProfile?.classId);
+
+  const studentMaterials = materials.filter(m =>
+    userProfile?.classId && m.classId === userProfile.classId
+  );
+
+  const studentVideos = videos.filter(v =>
+    userProfile?.classId && v.classId === userProfile.classId
+  );
+
+  const studentAnnouncements = announcements.filter(a =>
+    userProfile?.classId && a.classId === userProfile.classId
+  );
+
+  // Calculate real statistics
+  const pendingAssignments = studentAssignments.filter(a => {
+    const submission = studentSubmissions.find(s => s.assignmentId === a.id);
+    return !submission || submission.status !== 'Graded';
+  });
+
+  const completedAssignments = studentSubmissions.filter(s => 
+    s.status === 'Graded'
+  );
+
+  const attendanceRecords = attendance.filter(a => 
+    a.studentId === userProfile?.id
+  );
+
+  const attendanceRate = attendanceRecords.length > 0
+    ? Math.round((attendanceRecords.filter(a => a.status === 'Present' || a.status === 'Late').length / attendanceRecords.length) * 100)
+    : 0;
+
+  const avgScore = completedAssignments.length > 0
+    ? Math.round(completedAssignments.reduce((sum, s) => sum + (s.marksObtained || 0), 0) / completedAssignments.length)
+    : 0;
+
+  // Tab change handler
+  const handleTabChange = (tabId: string) => {
+    setCurrentTab(tabId);
+    if (onSelectTab) {
+      onSelectTab(tabId);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab) {
+      setCurrentTab(activeTab);
+    }
+  }, [activeTab]);
+
+  // CONTINUE IN PART 2...
