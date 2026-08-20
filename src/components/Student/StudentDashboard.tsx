@@ -31,6 +31,9 @@ import {
   Upload
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useMaterials } from '../../hooks/useMaterials';
+import { StudentAssignments } from './StudentAssignments';
 import {
   WelcomeBanner,
   AnalyticsCards,
@@ -55,6 +58,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   onOpenReceiptModal
 }) => {
   const { theme } = useTheme();
+  const { userProfile } = useAuth();
   
 
   const student: Student = {
@@ -94,8 +98,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     }
   };
 
-  // Empty Data States - ready for backend integration
-  const [materials] = useState<LearningMaterial[]>([]);
+  // Firebase Materials Integration
+  const { materials, loading: materialsLoading } = useMaterials(userProfile?.classId);
+  
   const [activeVideo, setActiveVideo] = useState<LearningMaterial | null>(null);
   const [submissions, setSubmissions] = useState<AssignmentSubmission[]>([]);
   
@@ -604,151 +609,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   );
 
   /* ========================================================================== */
-  /* 5. ASSIGNMENTS                                                             */
+  /* 5. ASSIGNMENTS - FULLY INTEGRATED WITH FIREBASE                           */
   /* ========================================================================== */
-  const renderAssignmentsView = () => (
-    <div className={`rounded-2xl border p-6 space-y-6 transition-all duration-250 shadow-lg ${
-      theme === 'dark' 
-        ? 'bg-[#0A0A0E] border-[rgba(255,255,255,0.08)]' 
-        : 'bg-white border-[rgba(0,0,0,0.06)]'
-    }`}>
-      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b transition-colors duration-250 ${
-        theme === 'dark' ? 'border-[rgba(255,255,255,0.08)]' : 'border-[rgba(0,0,0,0.06)]'
-      }`}>
-        <div>
-          <h2 className={`text-lg font-bold ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Assignments & Submissions</h2>
-          <p className={`text-xs ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>Submit practical assignments, track mentor feedback, and review marks</p>
-        </div>
-      </div>
+  const renderAssignmentsView = () => <StudentAssignments />;
 
-      {submittedAlert && (
-        <div className={`p-4 rounded-xl border text-[#10B981] text-xs font-semibold flex items-center gap-2 ${
-          theme === 'dark' 
-            ? 'bg-[#10B981]/10 border-[#10B981]/20' 
-            : 'bg-emerald-50 border-emerald-200'
-        }`}>
-          <CheckCircle2 className="w-4 h-4" />
-          Assignment submitted successfully! Your mentor will grade and post feedback shortly.
-        </div>
-      )}
-
-      {/* Upload Submission Box */}
-      <div className={`p-5 rounded-2xl border space-y-4 ${
-        theme === 'dark' 
-          ? 'bg-[#111] border-[#222]' 
-          : 'bg-gray-50 border-gray-200'
-      }`}>
-        <h3 className={`font-bold text-sm ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>Submit New Assignment</h3>
-        <form onSubmit={handleFormSubmitAssignment} className="space-y-3 text-xs">
-          <div>
-            <label className={`block text-[10px] uppercase font-bold mb-1 ${
-              theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-            }`}>Select Assignment</label>
-            <select className={`w-full p-2.5 rounded-xl ${
-              theme === 'dark' 
-                ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                : 'bg-gray-100 border-gray-300 text-gray-900'
-            }`}>
-              <option value="asg_1">Microservices OpenAPI & Swagger Documentation (Due Aug 05)</option>
-              <option value="asg_2">React 18 Custom Hook Library with State Reducers (Due Aug 12)</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${
-                theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-              }`}>Project ZIP File Name</label>
-              <input
-                type="text"
-                placeholder="e.g. rohan_mehta_openapi_sub.zip"
-                value={submissionFile}
-                onChange={(e) => setSubmissionFile(e.target.value)}
-                className={`w-full p-2.5 rounded-xl ${
-                  theme === 'dark' 
-                    ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                    : 'bg-gray-100 border-gray-300 text-gray-900'
-                }`}
-              />
-            </div>
-            <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${
-                theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-              }`}>GitHub / Cloud Artifact URL</label>
-              <input
-                type="url"
-                required
-                placeholder="https://github.com/rohanmehta/microservices-demo"
-                value={submissionUrl}
-                onChange={(e) => setSubmissionUrl(e.target.value)}
-                className={`w-full p-2.5 rounded-xl ${
-                  theme === 'dark' 
-                    ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                    : 'bg-gray-100 border-gray-300 text-gray-900'
-                }`}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="px-4 py-2 bg-[#6366F1] hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-2"
-          >
-            <Upload className="w-4 h-4" /> Upload Assignment Submission
-          </button>
-        </form>
-      </div>
-
-      {/* Submissions History Table */}
-      <div className="space-y-3">
-        <h3 className={`font-bold text-sm ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>Submitted Assignments & Feedback</h3>
-        <div className="space-y-3">
-          {submissions.map((sub) => (
-            <div key={sub.id} className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs ${
-              theme === 'dark' 
-                ? 'bg-[#111] border-[#222]' 
-                : 'bg-gray-50 border-gray-200'
-            }`}>
-              <div>
-                <span className={`text-[10px] font-mono ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>Submitted at: {sub.submittedAt}</span>
-                <h4 className={`font-bold text-sm mt-0.5 ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>{sub.fileName}</h4>
-                <a href={sub.fileUrl} target="_blank" rel="noreferrer" className="text-[#6366F1] text-[11px] hover:underline flex items-center gap-1 mt-0.5">
-                  {sub.fileUrl} <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
-                  sub.status === 'Graded' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20'
-                }`}>
-                  {sub.status}
-                </span>
-                {sub.marksObtained !== undefined && (
-                  <span className={`font-mono font-bold text-sm ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    {sub.marksObtained} / 100 Marks
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
 
   /* ========================================================================== */
   /* 6. ASSESSMENTS                                                             */

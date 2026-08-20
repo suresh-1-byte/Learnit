@@ -12,8 +12,13 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useClasses } from '../../hooks/useClasses';
 import { useMentorStats } from '../../hooks/useMentorStats';
 import { useAttendance } from '../../hooks/useAttendance';
+import { useAssignments } from '../../hooks/useAssignments';
+import { useAnnouncements } from '../../hooks/useAnnouncements';
+import { useMaterials } from '../../hooks/useMaterials';
+import { useVideos } from '../../hooks/useVideos';
 import { getStudentsByClass } from '../../services/firebase/students.service';
 import { AnalyticsBI } from '../Analytics/AnalyticsBI';
+import { AssignmentsManager } from './AssignmentsManager';
 import {
   BookOpen,
   UserCheck,
@@ -133,15 +138,63 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   const [qrTimer, setQrTimer] = useState(45);
   const [savedSuccessAlert, setSavedSuccessAlert] = useState(false);
 
-  // Assignments & Grading state
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [submissions, setSubmissions] = useState<AssignmentSubmission[]>([]);
+  // Assignments & Grading - Firebase Integration
+  const {
+    assignments,
+    submissions,
+    loading: assignmentsLoading,
+    error: assignmentsError,
+    addAssignment,
+    removeAssignment,
+    updateAssignmentData,
+    fetchSubmissions,
+    gradeStudentSubmission
+  } = useAssignments();
+  
+  // Firebase Materials Integration
+  const {
+    materials,
+    loading: materialsLoading,
+    error: materialsError,
+    addMaterial,
+    removeMaterial
+  } = useMaterials();
+  
+  // Firebase Videos Integration
+  const {
+    videos: firebaseVideos,
+    loading: videosLoading,
+    addVideo
+  } = useVideos();
+  
+  // Use Firebase videos or fallback to mock
+  const videos = firebaseVideos.length > 0 ? firebaseVideos : mockVideoRecordings;
+  
+  // Firebase Announcements Integration
+  const {
+    announcements: firebaseAnnouncements,
+    loading: announcementsLoading,
+    createAnnouncement
+  } = useAnnouncements();
+  
+  // Use Firebase announcements or fallback to mock
+  const announcements = firebaseAnnouncements.length > 0 ? firebaseAnnouncements : mockAnnouncementsList;
+  
   const [selectedSubmission, setSelectedSubmission] = useState<AssignmentSubmission | null>(null);
   const [gradeScore, setGradeScore] = useState<number>(95);
   const [gradeFeedback, setGradeFeedback] = useState<string>('');
   const [showCreateAssignmentModal, setShowCreateAssignmentModal] = useState(false);
   const [newAssignmentTitle, setNewAssignmentTitle] = useState('');
   const [newAssignmentDeadline, setNewAssignmentDeadline] = useState('2026-08-15');
+  // Additional assignment form fields
+  const [selectedClassForAssignment, setSelectedClassForAssignment] = useState<string>('');
+  const [newAssignmentDescription, setNewAssignmentDescription] = useState('');
+  const [newAssignmentInstructions, setNewAssignmentInstructions] = useState('');
+  const [newAssignmentMaxMarks, setNewAssignmentMaxMarks] = useState(100);
+  const [newAssignmentFile, setNewAssignmentFile] = useState<File | undefined>(undefined);
+  const [showSubmissionsModal, setShowSubmissionsModal] = useState(false);
+  const [selectedAssignmentForSubmissions, setSelectedAssignmentForSubmissions] = useState<any>(null);
+  const [showGradingModal, setShowGradingModal] = useState(false);
 
   // Assessments state
   const [assessments, setAssessments] = useState(mockAssessmentsList);
@@ -149,20 +202,19 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   const [newAssessmentTitle, setNewAssessmentTitle] = useState('');
   const [newAssessmentType, setNewAssessmentType] = useState('Coding Test');
 
-  // Study Materials state
-  const [materials, setMaterials] = useState<LearningMaterial[]>([]);
+  // Study Materials state - Firebase Integration
   const [showUploadMaterialModal, setShowUploadMaterialModal] = useState(false);
   const [newMatTitle, setNewMatTitle] = useState('');
-  const [newMatType, setNewMatType] = useState<'Video' | 'PDF' | 'Code Sandbox'>('Video');
+  const [newMatType, setNewMatType] = useState<'Video' | 'PDF' | 'Code Sandbox'>('PDF');
+  const [newMatDesc, setNewMatDesc] = useState('');
+  const [newMatFile, setNewMatFile] = useState<File | null>(null);
   const [newMatUrl, setNewMatUrl] = useState('');
 
-  // Video Library state
-  const [videos, setVideos] = useState(mockVideoRecordings);
+  // Video Library state - Firebase integrated above
   const [showUploadVideoModal, setShowUploadVideoModal] = useState(false);
   const [activePlayingVideo, setActivePlayingVideo] = useState<any | null>(null);
 
-  // Announcements state
-  const [announcements, setAnnouncements] = useState(mockAnnouncementsList);
+  // Announcements state - Firebase integrated above
   const [showCreateAnnouncementModal, setShowCreateAnnouncementModal] = useState(false);
   const [newAnnTitle, setNewAnnTitle] = useState('');
   const [newAnnBody, setNewAnnBody] = useState('');
@@ -343,45 +395,80 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
     }
   };
 
-  const handleGradeSubmission = (e: React.FormEvent) => {
+  const handleGradeSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedSubmission) return;
 
-    setSubmissions(prev => prev.map(s => {
-      if (s.id === selectedSubmission.id) {
-        return {
-          ...s,
-          status: 'Graded',
-          marksObtained: gradeScore,
-          feedback: gradeFeedback || 'Excellent clean architecture implementation and robust unit tests!'
-        };
+    try {
+      // Save grade to Firebase
+      await gradeStudentSubmission(
+        selectedSubmission.id,
+        gradeScore,
+        gradeFeedback || 'Good work!'
+      );
+      
+      // Refresh submissions if we have the assignment ID
+      if (selectedSubmission.assignmentId) {
+        await fetchSubmissions(selectedSubmission.assignmentId);
       }
-      return s;
-    }));
-
-    setSelectedSubmission(null);
+      
+      // Reset form
+      setSelectedSubmission(null);
+      setGradeScore(95);
+      setGradeFeedback('');
+      
+      alert('Submission graded successfully!');
+    } catch (error: any) {
+      console.error('Error grading submission:', error);
+      alert('Failed to grade submission: ' + error.message);
+    }
   };
 
-  const handleCreateAssignment = (e: React.FormEvent) => {
+  const handleCreateAssignment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAssignmentTitle) return;
+    
+    if (!newAssignmentTitle || !userProfile || !selectedClassForAssignment) {
+      alert('Please fill all required fields and select a class');
+      return;
+    }
 
-    const newAsg: Assignment = {
-      id: `asg_${Date.now()}`,
-      batchId: 'batch_1',
-      programTitle: 'Full-Stack Software Engineering',
-      title: newAssignmentTitle,
-      description: 'Implement complete functional service with error boundary and OpenAPI documentation.',
-      dueDate: newAssignmentDeadline,
-      maxMarks: 100,
-      createdDate: new Date().toISOString().split('T')[0],
-      submissionsCount: 0,
-      totalStudents: 60
-    };
+    try {
+      // Get selected class details
+      const selectedClass = classes.find(c => c.id === selectedClassForAssignment);
+      if (!selectedClass) {
+        alert('Please select a valid class');
+        return;
+      }
 
-    setAssignments([newAsg, ...assignments]);
-    setShowCreateAssignmentModal(false);
-    setNewAssignmentTitle('');
+      const assignmentData = {
+        title: newAssignmentTitle,
+        description: newAssignmentDescription || 'Complete the assignment as instructed',
+        mentorId: userProfile.id,
+        mentorName: userProfile.name,
+        classId: selectedClassForAssignment,
+        dueDate: newAssignmentDeadline,
+        maxMarks: newAssignmentMaxMarks,
+        instructions: newAssignmentInstructions || ''
+      };
+
+      // Create assignment in Firebase
+      await addAssignment(assignmentData, newAssignmentFile);
+      
+      // Reset form
+      setShowCreateAssignmentModal(false);
+      setNewAssignmentTitle('');
+      setNewAssignmentDescription('');
+      setNewAssignmentDeadline('2026-08-15');
+      setNewAssignmentMaxMarks(100);
+      setNewAssignmentInstructions('');
+      setNewAssignmentFile(undefined);
+      setSelectedClassForAssignment('');
+      
+      alert('Assignment created successfully!');
+    } catch (error: any) {
+      console.error('Error creating assignment:', error);
+      alert('Failed to create assignment: ' + error.message);
+    }
   };
 
   const handleCreateAssessment = (e: React.FormEvent) => {
@@ -405,26 +492,32 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
     setNewAssessmentTitle('');
   };
 
-  const handleAddMaterial = (e: React.FormEvent) => {
+  const handleAddMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMatTitle) return;
+    if (!newMatTitle || !newMatFile || !userProfile) return;
 
-    const newMat: LearningMaterial = {
-      id: `mat_${Date.now()}`,
-      batchId: 'batch_1',
-      programTitle: 'Full-Stack Software Engineering',
-      title: newMatTitle,
-      type: newMatType,
-      url: newMatUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      durationOrPages: '45 mins',
-      uploadedAt: new Date().toISOString().split('T')[0],
-      uploadedBy: mentorProfile.name
-    };
+    try {
+      const materialData = {
+        title: newMatTitle,
+        type: newMatType as 'Video' | 'PDF' | 'Code Sandbox' | 'Slides',
+        description: newMatDesc || '',
+        classId: selectedClass?.id || classes[0]?.id || 'default-class',
+        mentorId: userProfile.id,
+        tags: []
+      };
 
-    setMaterials([newMat, ...materials]);
-    setShowUploadMaterialModal(false);
-    setNewMatTitle('');
-    setNewMatUrl('');
+      await addMaterial(materialData, newMatFile);
+      
+      // Reset form
+      setShowUploadMaterialModal(false);
+      setNewMatTitle('');
+      setNewMatDesc('');
+      setNewMatFile(null);
+      setNewMatUrl('');
+    } catch (error) {
+      console.error('Failed to upload material:', error);
+      alert('Failed to upload material. Please try again.');
+    }
   };
 
   const handleCreateAnnouncement = (e: React.FormEvent) => {
@@ -2105,249 +2198,60 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
 };
 
   /* -------------------------------------------------------------------------- */
-  /* 6. ASSIGNMENTS & GRADEBOOK                                                 */
+  /* 6. ASSIGNMENTS & GRADEBOOK - FULLY INTEGRATED WITH FIREBASE               */
   /* -------------------------------------------------------------------------- */
   const renderAssignmentsView = () => (
-    <div className={`rounded-2xl border p-6 shadow-xs space-y-6 ${
-      theme === 'dark' 
-        ? 'bg-[#0A0A0A] border-[#1A1A1A]' 
-        : 'bg-white border-gray-200'
-    }`}>
-      <div className={`flex items-center justify-between pb-4 border-b ${
-        theme === 'dark' ? 'border-[#1A1A1A]' : 'border-gray-200'
-      }`}>
-        <div>
-          <h2 className={`text-lg font-bold ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Assignments & Submissions Gradebook</h2>
-          <p className={`text-xs ${
-            theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-          }`}>Publish new assignments, review student code repositories, and input grades</p>
-        </div>
-        <button
-          onClick={() => setShowCreateAssignmentModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-[#10B981] hover:bg-emerald-600 text-white rounded-xl text-xs font-semibold shadow-xs"
-        >
-          <Plus className="w-4 h-4" /> Create Assignment
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Submissions List */}
-        <div className="lg:col-span-2 space-y-4">
-          <h3 className={`text-[10px] font-bold uppercase tracking-[0.15em] ${
-            theme === 'dark' ? 'text-[#555]' : 'text-[#64748B]'
-          }`}>Student Submissions to Review</h3>
-
-          {submissions.map((sub) => (
-            <div key={sub.id} className={`p-4 rounded-xl border flex items-start justify-between gap-4 ${
-              theme === 'dark' 
-                ? 'border-[#1A1A1A] bg-[#111]' 
-                : 'border-gray-200 bg-gray-50'
-            }`}>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className={`font-bold text-sm ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>{sub.studentName}</span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
-                    sub.status === 'Graded' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20'
-                  }`}>
-                    {sub.status}
-                  </span>
-                </div>
-
-                <a
-                  href={sub.fileUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs font-mono text-[#6366F1] hover:underline flex items-center gap-1 mt-1.5"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" /> {sub.fileName}
-                </a>
-
-                {sub.feedback && (
-                  <p className={`text-xs p-2.5 rounded-lg border mt-2 italic ${
-                    theme === 'dark' 
-                      ? 'text-[#AAA] bg-[#0A0A0A] border-[#222]' 
-                      : 'text-[#64748B] bg-gray-100 border-gray-200'
-                  }`}>
-                    "{sub.feedback}"
-                  </p>
-                )}
-              </div>
-
-              <div className="text-right">
-                {sub.marksObtained !== undefined ? (
-                  <div>
-                    <span className="text-xl font-extrabold text-[#10B981]">{sub.marksObtained}</span>
-                    <span className={`text-xs ${
-                      theme === 'dark' ? 'text-[#555]' : 'text-[#64748B]'
-                    }`}>/100</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setSelectedSubmission(sub);
-                      setGradeScore(90);
-                      setGradeFeedback('');
-                    }}
-                    className="px-3.5 py-1.5 bg-[#6366F1] hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-xs"
-                  >
-                    Grade Submission
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Evaluation Panel */}
-        {selectedSubmission ? (
-          <div className={`p-5 rounded-2xl border space-y-4 ${
-            theme === 'dark' 
-              ? 'bg-[#111] border-[#222]' 
-              : 'bg-gray-50 border-gray-200'
-          }`}>
-            <div className={`flex items-center justify-between pb-2 border-b ${
-              theme === 'dark' ? 'border-[#222]' : 'border-gray-200'
-            }`}>
-              <h3 className={`font-bold text-xs ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>Evaluate: {selectedSubmission.studentName}</h3>
-              <button onClick={() => setSelectedSubmission(null)} className={`${
-                theme === 'dark' ? 'text-[#666] hover:text-white' : 'text-gray-500 hover:text-gray-900'
-              }`}>
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleGradeSubmission} className="space-y-3 text-xs">
-              <div>
-                <label className={`block font-semibold mb-1 ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>Marks Obtained (Out of 100)</label>
-                <input
-                  type="number"
-                  max={100}
-                  min={0}
-                  value={gradeScore}
-                  onChange={(e) => setGradeScore(Number(e.target.value))}
-                  className={`w-full p-2.5 rounded-xl font-bold ${
-                    theme === 'dark' 
-                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900'
-                  }`}
-                />
-              </div>
-
-              <div>
-                <label className={`block font-semibold mb-1 ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>Mentor Feedback & Code Review</label>
-                <textarea
-                  rows={4}
-                  value={gradeFeedback}
-                  onChange={(e) => setGradeFeedback(e.target.value)}
-                  placeholder="Enter detailed code quality feedback..."
-                  className={`w-full p-2.5 rounded-xl ${
-                    theme === 'dark' 
-                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900'
-                  }`}
-                />
-              </div>
-
-              <button type="submit" className="w-full py-2.5 bg-[#10B981] hover:bg-emerald-600 text-white font-semibold rounded-xl">
-                Publish Grade
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div className={`p-8 text-center text-xs rounded-2xl border flex flex-col items-center justify-center ${
-            theme === 'dark' 
-              ? 'text-[#666] bg-[#111] border-[#1A1A1A]' 
-              : 'text-[#64748B] bg-gray-50 border-gray-200'
-          }`}>
-            <FileCheck className={`w-8 h-8 mb-2 ${
-              theme === 'dark' ? 'text-[#333]' : 'text-gray-400'
-            }`} />
-            Select a student submission to evaluate code quality and assign marks.
-          </div>
-        )}
-      </div>
-
-      {/* Create Assignment Modal */}
-      {showCreateAssignmentModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className={`rounded-2xl max-w-md w-full p-6 shadow-2xl border space-y-4 ${
-            theme === 'dark' 
-              ? 'bg-[#0A0A0A] border-[#1A1A1A] text-white' 
-              : 'bg-white border-gray-200 text-gray-900'
-          }`}>
-            <div className={`flex items-center justify-between pb-2 border-b ${
-              theme === 'dark' ? 'border-[#1A1A1A]' : 'border-gray-200'
-            }`}>
-              <h3 className={`font-bold text-base ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>Create New Assignment</h3>
-              <button onClick={() => setShowCreateAssignmentModal(false)} className={`${
-                theme === 'dark' ? 'text-[#666] hover:text-white' : 'text-gray-500 hover:text-gray-900'
-              }`}>
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateAssignment} className="space-y-3 text-xs">
-              <div>
-                <label className={`block font-semibold mb-1 ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>Assignment Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Distributed Kafka Event Consumer System"
-                  value={newAssignmentTitle}
-                  onChange={(e) => setNewAssignmentTitle(e.target.value)}
-                  className={`w-full p-2.5 rounded-xl ${
-                    theme === 'dark' 
-                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900'
-                  }`}
-                />
-              </div>
-
-              <div>
-                <label className={`block font-semibold mb-1 ${
-                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>Submission Deadline *</label>
-                <input
-                  type="date"
-                  required
-                  value={newAssignmentDeadline}
-                  onChange={(e) => setNewAssignmentDeadline(e.target.value)}
-                  className={`w-full p-2.5 rounded-xl ${
-                    theme === 'dark' 
-                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900'
-                  }`}
-                />
-              </div>
-
-              <div className={`flex justify-end gap-2 pt-3 border-t ${
-                theme === 'dark' ? 'border-[#1A1A1A]' : 'border-gray-200'
-              }`}>
-                <button type="button" onClick={() => setShowCreateAssignmentModal(false)} className={`px-4 py-2 ${
-                  theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
-                }`}>Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-[#10B981] text-white rounded-xl font-semibold">Publish Assignment</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-    </div>
+    <AssignmentsManager
+      // Assignment creation modal
+      showCreateAssignmentModal={showCreateAssignmentModal}
+      setShowCreateAssignmentModal={setShowCreateAssignmentModal}
+      handleCreateAssignment={handleCreateAssignment}
+      
+      // Form state
+      selectedClassForAssignment={selectedClassForAssignment}
+      setSelectedClassForAssignment={setSelectedClassForAssignment}
+      newAssignmentTitle={newAssignmentTitle}
+      setNewAssignmentTitle={setNewAssignmentTitle}
+      newAssignmentDescription={newAssignmentDescription}
+      setNewAssignmentDescription={setNewAssignmentDescription}
+      newAssignmentInstructions={newAssignmentInstructions}
+      setNewAssignmentInstructions={setNewAssignmentInstructions}
+      newAssignmentDeadline={newAssignmentDeadline}
+      setNewAssignmentDeadline={setNewAssignmentDeadline}
+      newAssignmentMaxMarks={newAssignmentMaxMarks}
+      setNewAssignmentMaxMarks={setNewAssignmentMaxMarks}
+      newAssignmentFile={newAssignmentFile}
+      setNewAssignmentFile={setNewAssignmentFile}
+      
+      // Classes data
+      classes={classes}
+      
+      // Assignments data
+      assignments={assignments}
+      assignmentsLoading={assignmentsLoading}
+      
+      // Submissions modal
+      showSubmissionsModal={showSubmissionsModal}
+      setShowSubmissionsModal={setShowSubmissionsModal}
+      selectedAssignmentForSubmissions={selectedAssignmentForSubmissions}
+      setSelectedAssignmentForSubmissions={setSelectedAssignmentForSubmissions}
+      submissions={submissions}
+      fetchSubmissions={fetchSubmissions}
+      
+      // Grading modal
+      showGradingModal={showGradingModal}
+      setShowGradingModal={setShowGradingModal}
+      selectedSubmission={selectedSubmission}
+      setSelectedSubmission={setSelectedSubmission}
+      gradeScore={gradeScore}
+      setGradeScore={setGradeScore}
+      gradeFeedback={gradeFeedback}
+      setGradeFeedback={setGradeFeedback}
+      handleGradeSubmission={handleGradeSubmission}
+      
+      // Actions
+      removeAssignment={removeAssignment}
+    />
   );
 
   /* -------------------------------------------------------------------------- */
@@ -2584,11 +2488,44 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
               <div>
                 <label className={`block font-semibold mb-1 ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
-                }`}>URL Link</label>
+                }`}>Description</label>
+                <textarea
+                  rows={2}
+                  value={newMatDesc}
+                  onChange={(e) => setNewMatDesc(e.target.value)}
+                  className={`w-full p-2.5 rounded-xl ${
+                    theme === 'dark' 
+                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900'
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className={`block font-semibold mb-1 ${
+                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                }`}>File * (PDF, Video, etc.)</label>
+                <input
+                  type="file"
+                  required
+                  onChange={(e) => setNewMatFile(e.target.files?.[0] || null)}
+                  className={`w-full p-2.5 rounded-xl ${
+                    theme === 'dark' 
+                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900'
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className={`block font-semibold mb-1 ${
+                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                }`}>External URL (optional)</label>
                 <input
                   type="url"
                   value={newMatUrl}
                   onChange={(e) => setNewMatUrl(e.target.value)}
+                  placeholder="https://..."
                   className={`w-full p-2.5 rounded-xl ${
                     theme === 'dark' 
                       ? 'bg-[#0D0D0D] border-[#222] text-white' 
