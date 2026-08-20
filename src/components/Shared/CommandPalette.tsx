@@ -156,7 +156,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-[#555] font-mono group-hover:text-white">Jump to</span>
                   <div className="w-6 h-6 bg-white rounded-none overflow-hidden flex items-center justify-center">
-                    <img src="/logo.png" alt="LearnIT" className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
+                    <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT" className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
                   </div>
                 </div>
               </button>

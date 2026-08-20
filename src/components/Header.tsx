@@ -113,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2.5 cursor-pointer group"
           >
             <div className="w-12 h-12 rounded-none bg-white flex items-center justify-center text-white shadow-sm group-hover:scale-105 group-hover:shadow-md transition-all duration-250 overflow-hidden">
-              <img src="/logo.png" alt="LearnIT Logo" className="w-full h-full object-contain" />
+              <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">

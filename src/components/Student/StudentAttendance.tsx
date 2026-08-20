@@ -7,7 +7,12 @@ import { useAttendance } from '../../hooks/useAttendance';
 export const StudentAttendance: React.FC = () => {
   const { theme } = useTheme();
   const { userProfile } = useAuth();
-  const { attendanceRecords, loading, fetchAttendanceByStudent, calculateAttendancePercentage } = useAttendance();
+  const { 
+    attendance: attendanceRecords, 
+    loading, 
+    fetchStudentAttendance, 
+    getStats 
+  } = useAttendance();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -15,15 +20,24 @@ export const StudentAttendance: React.FC = () => {
 
   useEffect(() => {
     if (userProfile?.id) {
-      fetchAttendanceByStudent(userProfile.id);
-      loadAttendancePercentage();
+      loadAttendance();
     }
   }, [userProfile?.id]);
 
-  const loadAttendancePercentage = async () => {
-    if (userProfile?.id) {
-      const percentage = await calculateAttendancePercentage(userProfile.id);
-      setAttendancePercentage(percentage);
+  const loadAttendance = async () => {
+    if (!userProfile?.id) return;
+    
+    try {
+      // Fetch student's attendance records
+      await fetchStudentAttendance(userProfile.id, userProfile.classId);
+      
+      // Calculate percentage
+      const stats = await getStats(userProfile.id, userProfile.classId);
+      if (stats) {
+        setAttendancePercentage(stats.percentage);
+      }
+    } catch (error) {
+      console.error('Error loading attendance:', error);
     }
   };
 
@@ -46,10 +60,12 @@ export const StudentAttendance: React.FC = () => {
   };
 
   const calculateStats = () => {
-    const total = attendanceRecords.length;
-    const present = attendanceRecords.filter(r => r.status === 'Present').length;
-    const late = attendanceRecords.filter(r => r.status === 'Late').length;
-    const absent = attendanceRecords.filter(r => r.status === 'Absent').length;
+    // Ensure attendanceRecords is an array
+    const records = Array.isArray(attendanceRecords) ? attendanceRecords : [];
+    const total = records.length;
+    const present = records.filter(r => r.status === 'Present').length;
+    const late = records.filter(r => r.status === 'Late').length;
+    const absent = records.filter(r => r.status === 'Absent').length;
     
     return { total, present, late, absent };
   };
@@ -66,10 +82,12 @@ export const StudentAttendance: React.FC = () => {
   const status = getAttendanceStatus();
 
   // Filter records by selected month/year
-  const filteredRecords = attendanceRecords.filter(record => {
-    const recordDate = new Date(record.date);
-    return recordDate.getMonth() === selectedMonth && recordDate.getFullYear() === selectedYear;
-  });
+  const filteredRecords = Array.isArray(attendanceRecords) 
+    ? attendanceRecords.filter(record => {
+        const recordDate = new Date(record.date);
+        return recordDate.getMonth() === selectedMonth && recordDate.getFullYear() === selectedYear;
+      })
+    : [];
 
   return (
     <div className="space-y-6">

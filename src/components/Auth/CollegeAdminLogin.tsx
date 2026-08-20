@@ -38,7 +38,7 @@ export const CollegeAdminLogin: React.FC<CollegeAdminLoginProps> = ({
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-16 h-16 rounded-none bg-white flex items-center justify-center text-white shadow-xl overflow-hidden">
-              <img src="/logo.png" alt="LearnIT Logo" className="w-full h-full object-contain" />
+              <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT Logo" className="w-full h-full object-contain" />
             </div>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white">College Administrator Login</h1>

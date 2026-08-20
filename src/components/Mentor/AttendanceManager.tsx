@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Users, CheckCircle, XCircle, Clock, QrCode } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAttendance } from '../../hooks/useAttendance';
+import { getAllStudents } from '../../services/firebase/students.service';
 
 interface AttendanceManagerProps {
   selectedClass: any;
@@ -11,13 +12,27 @@ interface AttendanceManagerProps {
 export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedClass }) => {
   const { theme } = useTheme();
   const { userProfile } = useAuth();
-  const { attendanceRecords, loading, markAttendance, fetchAttendanceByClass } = useAttendance();
+  const { 
+    attendance: attendanceRecords, 
+    loading, 
+    markStudentAttendance: markAttendance, 
+    fetchAttendanceByClassAndDate 
+  } = useAttendance();
 
   const [showMarkModal, setShowMarkModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showQRCode, setShowQRCode] = useState(false);
   const [qrCodeData, setQRCodeData] = useState('');
   const [studentAttendanceList, setStudentAttendanceList] = useState<any[]>([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+
+  // Load attendance records when class or date changes
+  useEffect(() => {
+    if (selectedClass?.id && selectedDate) {
+      console.log('Fetching attendance for:', selectedClass.id, selectedDate);
+      fetchAttendanceByClassAndDate(selectedClass.id, selectedDate);
+    }
+  }, [selectedClass?.id, selectedDate]);
 
   // Generate QR Code for attendance
   const generateQRCode = () => {
@@ -32,20 +47,54 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
     setShowQRCode(true);
   };
 
-  // Initialize student list for manual marking
-  const initializeManualMarking = () => {
-    // Mock student list - in real app, fetch from class
-    const mockStudents = [
-      { id: 'st1', name: 'Student 1', rollNumber: 'CS001' },
-      { id: 'st2', name: 'Student 2', rollNumber: 'CS002' },
-      { id: 'st3', name: 'Student 3', rollNumber: 'CS003' },
-    ];
-    
-    setStudentAttendanceList(mockStudents.map(student => ({
-      ...student,
-      status: 'Present' as 'Present' | 'Absent' | 'Late'
-    })));
-    setShowMarkModal(true);
+  // Initialize student list for manual marking - LOAD REAL STUDENTS FROM FIREBASE
+  const initializeManualMarking = async () => {
+    if (!selectedClass) {
+      alert('Please select a class first');
+      return;
+    }
+
+    setLoadingStudents(true);
+    try {
+      console.log('Loading students for class:', selectedClass.id);
+      
+      // Get all students from Firebase
+      const allStudents = await getAllStudents();
+      console.log('All students:', allStudents);
+      
+      // Filter students who belong to the selected class
+      const classStudents = allStudents.filter(student => {
+        // Check if student's classId matches selected class
+        const matchesClassId = student.classId === selectedClass.id;
+        // Also check if student's classIds array includes this class
+        const matchesClassIds = Array.isArray(student.classIds) && student.classIds.includes(selectedClass.id);
+        
+        return matchesClassId || matchesClassIds;
+      });
+      
+      console.log('Filtered students for class:', classStudents);
+      
+      if (classStudents.length === 0) {
+        alert(`No students found in class "${selectedClass.title || selectedClass.name}". Please assign students to this class first.`);
+        setLoadingStudents(false);
+        return;
+      }
+      
+      // Initialize attendance list with all students marked as Present by default
+      setStudentAttendanceList(classStudents.map(student => ({
+        id: student.id,
+        name: student.name,
+        rollNumber: student.rollNumber || student.usn || 'N/A',
+        status: 'Present' as 'Present' | 'Absent' | 'Late'
+      })));
+      
+      setShowMarkModal(true);
+    } catch (error) {
+      console.error('Error loading students:', error);
+      alert('Failed to load students. Please try again.');
+    } finally {
+      setLoadingStudents(false);
+    }
   };
 
   const handleMarkAttendance = async () => {
@@ -56,11 +105,13 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
       for (const student of studentAttendanceList) {
         await markAttendance({
           classId: selectedClass.id,
+          className: selectedClass.title || selectedClass.name,
           studentId: student.id,
           studentName: student.name,
           rollNumber: student.rollNumber,
           date: selectedDate,
           status: student.status,
+          mentorId: userProfile.id,
           markedBy: userProfile.id,
           markedByName: userProfile.displayName || userProfile.name
         });
@@ -72,7 +123,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
       
       // Refresh attendance records
       if (selectedClass?.id) {
-        fetchAttendanceByClass(selectedClass.id, selectedDate);
+        fetchAttendanceByClassAndDate(selectedClass.id, selectedDate);
       }
     } catch (error) {
       console.error('Error marking attendance:', error);
@@ -96,10 +147,12 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
   };
 
   const calculateStats = () => {
-    const total = attendanceRecords.length;
-    const present = attendanceRecords.filter(r => r.status === 'Present').length;
-    const absent = attendanceRecords.filter(r => r.status === 'Absent').length;
-    const late = attendanceRecords.filter(r => r.status === 'Late').length;
+    // Ensure attendanceRecords is an array
+    const records = Array.isArray(attendanceRecords) ? attendanceRecords : [];
+    const total = records.length;
+    const present = records.filter(r => r.status === 'Present').length;
+    const absent = records.filter(r => r.status === 'Absent').length;
+    const late = records.filter(r => r.status === 'Late').length;
     const percentage = total > 0 ? ((present + late) / total * 100).toFixed(1) : '0';
     
     return { total, present, absent, late, percentage };
@@ -123,11 +176,24 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
             <p className={`text-xs mt-1 ${
               theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
             }`}>
-              {selectedClass ? `Class: ${selectedClass.name}` : 'Select a class to manage attendance'}
+              {selectedClass 
+                ? `Class: ${selectedClass.title || selectedClass.name} (${selectedDate})` 
+                : 'Please create a class first or select from My Classes tab'}
             </p>
           </div>
 
           <div className="flex gap-3">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className={`px-3 py-2 rounded-lg border text-sm font-medium ${
+                theme === 'dark'
+                  ? 'bg-[#111] border-[#222] text-white'
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            />
+            
             <button
               onClick={generateQRCode}
               disabled={!selectedClass}
@@ -143,15 +209,24 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
 
             <button
               onClick={initializeManualMarking}
-              disabled={!selectedClass}
+              disabled={!selectedClass || loadingStudents}
               className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all ${
                 theme === 'dark'
                   ? 'bg-[#10B981] hover:bg-[#059669] text-white disabled:bg-[#333] disabled:text-[#666]'
                   : 'bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-gray-300 disabled:text-gray-500'
               }`}
             >
-              <CheckCircle className="w-4 h-4" />
-              Mark Manually
+              {loadingStudents ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  Mark Manually
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -256,7 +331,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
           </div>
         )}
 
-        {!loading && attendanceRecords.length === 0 && (
+        {!loading && (!attendanceRecords || attendanceRecords.length === 0) && (
           <div className={`text-center py-12 rounded-2xl border ${
             theme === 'dark' ? 'bg-[#111] border-[#222]' : 'bg-gray-50 border-gray-200'
           }`}>
@@ -269,7 +344,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({ selectedCl
           </div>
         )}
 
-        {!loading && attendanceRecords.length > 0 && (
+        {!loading && attendanceRecords && attendanceRecords.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
