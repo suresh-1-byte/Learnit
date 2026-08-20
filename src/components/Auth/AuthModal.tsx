@@ -4,6 +4,8 @@ import { UserRole } from '../../types';
 import { useTheme } from '../../contexts/ThemeContext';
 import { MentorLogin } from './MentorLogin';
 import { StudentLogin } from './StudentLogin';
+import { MentorSignup } from './MentorSignup';
+import { StudentSignup } from './StudentSignup';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -11,7 +13,7 @@ interface AuthModalProps {
   onLoginSuccess: (role: UserRole) => void;
 }
 
-type AuthView = 'role_selection' | 'mentor_login' | 'student_login';
+type AuthView = 'role_selection' | 'mentor_login' | 'student_login' | 'mentor_signup' | 'student_signup';
 
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
@@ -35,7 +37,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setAuthView('role_selection');
   };
 
-  // If showing mentor or student login, render those components
+  // If showing mentor or student login/signup, render those components
   if (authView === 'mentor_login') {
     return (
       <MentorLogin
@@ -45,6 +47,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
         }}
         onLoginSuccess={onLoginSuccess}
+        onSwitchToSignup={() => setAuthView('mentor_signup')}
+      />
+    );
+  }
+
+  if (authView === 'mentor_signup') {
+    return (
+      <MentorSignup
+        isOpen={true}
+        onClose={() => {
+          setAuthView('role_selection');
+          onClose();
+        }}
+        onSignupSuccess={onLoginSuccess}
+        onSwitchToLogin={() => setAuthView('mentor_login')}
       />
     );
   }
@@ -58,6 +75,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
         }}
         onLoginSuccess={onLoginSuccess}
+        onSwitchToSignup={() => setAuthView('student_signup')}
+      />
+    );
+  }
+
+  if (authView === 'student_signup') {
+    return (
+      <StudentSignup
+        isOpen={true}
+        onClose={() => {
+          setAuthView('role_selection');
+          onClose();
+        }}
+        onSignupSuccess={onLoginSuccess}
+        onSwitchToLogin={() => setAuthView('student_login')}
       />
     );
   }

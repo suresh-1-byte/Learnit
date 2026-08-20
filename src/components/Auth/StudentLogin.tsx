@@ -18,12 +18,14 @@ interface StudentLoginProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (role: UserRole) => void;
+  onSwitchToSignup?: () => void;
 }
 
 export const StudentLogin: React.FC<StudentLoginProps> = ({
   isOpen,
   onClose,
-  onLoginSuccess
+  onLoginSuccess,
+  onSwitchToSignup
 }) => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
@@ -161,6 +163,18 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
         </form>
 
         <div className="pt-3 sm:pt-4 border-t border-[#1A1A1A] text-center">
+          {onSwitchToSignup && (
+            <p className="text-xs text-[#666] mb-3">
+              Don't have an account?{' '}
+              <button
+                onClick={onSwitchToSignup}
+                disabled={loading}
+                className="text-[#A855F7] hover:text-purple-400 font-semibold disabled:opacity-50"
+              >
+                Sign up here
+              </button>
+            </p>
+          )}
           <p className="text-[10px] sm:text-[11px] text-[#666]">
             Unauthorized access attempts are logged and monitored.
           </p>

@@ -2,12 +2,13 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   User,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence
 } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import { UserProfile, UserRole } from '../types';
 
@@ -16,6 +17,7 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ user: User; profile: UserProfile }>;
+  signup: (email: string, password: string, profileData: Omit<UserProfile, 'id'>) => Promise<{ user: User; profile: UserProfile }>;
   logout: () => Promise<void>;
   refreshUserProfile: () => Promise<void>;
 }
@@ -80,6 +82,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Signup function
+  const signup = async (email: string, password: string, profileData: Omit<UserProfile, 'id'>) => {
+    try {
+      // Set persistence to local
+      await setPersistence(auth, browserLocalPersistence);
+      
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Create user profile in Firestore
+      const profile: UserProfile = {
+        id: user.uid,
+        ...profileData
+      };
+      
+      await setDoc(doc(db, 'users', user.uid), profile);
+      
+      setUserProfile(profile);
+      
+      return { user, profile };
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      throw error;
+    }
+  };
+
   // Logout function
   const logout = async () => {
     try {
@@ -124,6 +153,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userProfile,
     loading,
     login,
+    signup,
     logout,
     refreshUserProfile
   };
