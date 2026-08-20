@@ -118,7 +118,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {/* Header */}
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-16 h-16 rounded-none bg-white flex items-center justify-center text-white shadow-xl overflow-hidden">
+              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-white shadow-xl overflow-hidden">
                 <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT Logo" className="w-full h-full object-contain" />
               </div>
             </div>

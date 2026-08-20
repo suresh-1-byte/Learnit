@@ -181,7 +181,7 @@ export const MentorSignup: React.FC<MentorSignupProps> = ({
 
         {/* Header */}
         <div className="bg-gradient-to-br from-[#312E81] via-[#1E1B4B] to-[#111827] p-8 text-center">
-          <div className="w-16 h-16 rounded-none bg-white flex items-center justify-center text-white shadow-xl mx-auto mb-3 overflow-hidden">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-white shadow-xl mx-auto mb-3 overflow-hidden">
             <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-white">Mentor Registration</h1>

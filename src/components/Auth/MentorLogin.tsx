@@ -83,7 +83,7 @@ export const MentorLogin: React.FC<MentorLoginProps> = ({
 
       {/* Header */}
       <div className="bg-gradient-to-br from-[#1E1B4B] via-[#111838] to-[#0B0F28] p-8 sm:p-10 text-center">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-none bg-white flex items-center justify-center text-white shadow-xl mx-auto mb-3 sm:mb-4 overflow-hidden">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center text-white shadow-xl mx-auto mb-3 sm:mb-4 overflow-hidden">
           <img src={`/logo.png?v=${Date.now()}`} alt="LearnIT Logo" className="w-full h-full object-contain" />
         </div>
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Mentor Portal</h1>
