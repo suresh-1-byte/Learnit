@@ -122,53 +122,103 @@ export const getAnnouncementsByMentor = async (mentorId: string): Promise<Announ
  */
 export const getAnnouncementsByClass = async (classId: string): Promise<Announcement[]> => {
   try {
-    const q = query(
-      collection(db, ANNOUNCEMENTS_COLLECTION),
-      where('targetClassIds', 'array-contains', classId),
-      orderBy('createdAt', 'desc')
-    );
-    
-    const querySnapshot = await getDocs(q);
+    console.log('getAnnouncementsByClass called with classId:', classId);
     const announcements: Announcement[] = [];
     
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      announcements.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Announcement);
-    });
+    // Try to get announcements for specific class - with fallback
+    try {
+      const q = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetClassIds', 'array-contains', classId),
+        orderBy('createdAt', 'desc')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched specific class announcements with orderBy:', announcements.length);
+    } catch (indexError: any) {
+      console.warn('Index error for specific class, trying without orderBy:', indexError.message);
+      // Fallback without orderBy
+      const q = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetClassIds', 'array-contains', classId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched specific class announcements without orderBy:', announcements.length);
+    }
     
-    // Also get announcements for all classes
-    const allClassesQuery = query(
-      collection(db, ANNOUNCEMENTS_COLLECTION),
-      where('targetType', '==', 'All Classes'),
-      orderBy('createdAt', 'desc')
-    );
+    // Also get announcements for all classes - with fallback
+    try {
+      const allClassesQuery = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetType', '==', 'All Classes'),
+        orderBy('createdAt', 'desc')
+      );
+      
+      const allClassesSnapshot = await getDocs(allClassesQuery);
+      allClassesSnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched all classes announcements with orderBy');
+    } catch (indexError: any) {
+      console.warn('Index error for all classes, trying without orderBy:', indexError.message);
+      // Fallback without orderBy
+      const allClassesQuery = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetType', '==', 'All Classes')
+      );
+      
+      const allClassesSnapshot = await getDocs(allClassesQuery);
+      allClassesSnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched all classes announcements without orderBy');
+    }
     
-    const allClassesSnapshot = await getDocs(allClassesQuery);
-    allClassesSnapshot.forEach((doc) => {
-      const data = doc.data();
-      announcements.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Announcement);
-    });
-    
-    // Remove duplicates and sort by date
+    // Remove duplicates and sort by date in memory
     const uniqueAnnouncements = Array.from(
       new Map(announcements.map(a => [a.id, a])).values()
     );
     
-    return uniqueAnnouncements.sort((a, b) => 
+    const sorted = uniqueAnnouncements.sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  } catch (error) {
+    
+    console.log('Total unique announcements after sorting:', sorted.length);
+    return sorted;
+  } catch (error: any) {
     console.error('Error getting class announcements:', error);
+    console.error('Full error:', error);
     throw error;
   }
 };
@@ -181,34 +231,18 @@ export const getAnnouncementsByStudent = async (
   classIds: string[]
 ): Promise<Announcement[]> => {
   try {
+    console.log('getAnnouncementsByStudent called:', { studentId, classIds });
     const announcements: Announcement[] = [];
     
-    // Get announcements targeted to all classes
-    const allClassesQuery = query(
-      collection(db, ANNOUNCEMENTS_COLLECTION),
-      where('targetType', '==', 'All Classes'),
-      orderBy('createdAt', 'desc')
-    );
-    const allClassesSnapshot = await getDocs(allClassesQuery);
-    allClassesSnapshot.forEach((doc) => {
-      const data = doc.data();
-      announcements.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Announcement);
-    });
-    
-    // Get announcements for student's classes
-    for (const classId of classIds) {
-      const classQuery = query(
+    // Get announcements targeted to all classes - with fallback
+    try {
+      const allClassesQuery = query(
         collection(db, ANNOUNCEMENTS_COLLECTION),
-        where('targetClassIds', 'array-contains', classId),
+        where('targetType', '==', 'All Classes'),
         orderBy('createdAt', 'desc')
       );
-      const classSnapshot = await getDocs(classQuery);
-      classSnapshot.forEach((doc) => {
+      const allClassesSnapshot = await getDocs(allClassesQuery);
+      allClassesSnapshot.forEach((doc) => {
         const data = doc.data();
         announcements.push({
           id: doc.id,
@@ -217,35 +251,116 @@ export const getAnnouncementsByStudent = async (
           updatedAt: data.updatedAt?.toDate().toISOString()
         } as Announcement);
       });
+      console.log('Fetched all classes announcements with orderBy');
+    } catch (indexError: any) {
+      console.warn('Index error for all classes, trying without orderBy');
+      const allClassesQuery = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetType', '==', 'All Classes')
+      );
+      const allClassesSnapshot = await getDocs(allClassesQuery);
+      allClassesSnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched all classes announcements without orderBy');
     }
     
-    // Get announcements targeted specifically to this student
-    const studentQuery = query(
-      collection(db, ANNOUNCEMENTS_COLLECTION),
-      where('targetStudentIds', 'array-contains', studentId),
-      orderBy('createdAt', 'desc')
-    );
-    const studentSnapshot = await getDocs(studentQuery);
-    studentSnapshot.forEach((doc) => {
-      const data = doc.data();
-      announcements.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString()
-      } as Announcement);
-    });
+    // Get announcements for student's classes
+    for (const classId of classIds) {
+      try {
+        const classQuery = query(
+          collection(db, ANNOUNCEMENTS_COLLECTION),
+          where('targetClassIds', 'array-contains', classId),
+          orderBy('createdAt', 'desc')
+        );
+        const classSnapshot = await getDocs(classQuery);
+        classSnapshot.forEach((doc) => {
+          const data = doc.data();
+          announcements.push({
+            id: doc.id,
+            ...data,
+            createdAt: data.createdAt?.toDate().toISOString(),
+            updatedAt: data.updatedAt?.toDate().toISOString()
+          } as Announcement);
+        });
+        console.log(`Fetched class ${classId} announcements with orderBy`);
+      } catch (indexError: any) {
+        console.warn(`Index error for class ${classId}, trying without orderBy`);
+        const classQuery = query(
+          collection(db, ANNOUNCEMENTS_COLLECTION),
+          where('targetClassIds', 'array-contains', classId)
+        );
+        const classSnapshot = await getDocs(classQuery);
+        classSnapshot.forEach((doc) => {
+          const data = doc.data();
+          announcements.push({
+            id: doc.id,
+            ...data,
+            createdAt: data.createdAt?.toDate().toISOString(),
+            updatedAt: data.updatedAt?.toDate().toISOString()
+          } as Announcement);
+        });
+        console.log(`Fetched class ${classId} announcements without orderBy`);
+      }
+    }
+    
+    // Get announcements targeted specifically to this student - with fallback
+    try {
+      const studentQuery = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetStudentIds', 'array-contains', studentId),
+        orderBy('createdAt', 'desc')
+      );
+      const studentSnapshot = await getDocs(studentQuery);
+      studentSnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched student-specific announcements with orderBy');
+    } catch (indexError: any) {
+      console.warn('Index error for student-specific, trying without orderBy');
+      const studentQuery = query(
+        collection(db, ANNOUNCEMENTS_COLLECTION),
+        where('targetStudentIds', 'array-contains', studentId)
+      );
+      const studentSnapshot = await getDocs(studentQuery);
+      studentSnapshot.forEach((doc) => {
+        const data = doc.data();
+        announcements.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString()
+        } as Announcement);
+      });
+      console.log('Fetched student-specific announcements without orderBy');
+    }
     
     // Remove duplicates and sort by date
     const uniqueAnnouncements = Array.from(
       new Map(announcements.map(a => [a.id, a])).values()
     );
     
-    return uniqueAnnouncements.sort((a, b) => 
+    const sorted = uniqueAnnouncements.sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  } catch (error) {
+    
+    console.log('Total unique student announcements:', sorted.length);
+    return sorted;
+  } catch (error: any) {
     console.error('Error getting student announcements:', error);
+    console.error('Full error:', error);
     throw error;
   }
 };
