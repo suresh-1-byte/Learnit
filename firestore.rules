@@ -88,7 +88,37 @@ service cloud.firestore {
       allow update, delete: if isMentor() && resource.data.mentorId == request.auth.uid;
     }
     
-    // Submissions collection
+    // Assessments collection
+    match /assessments/{assessmentId} {
+      // Anyone authenticated can read assessments
+      allow read: if isSignedIn();
+      
+      // Only mentors can create assessments
+      allow create: if isMentor();
+      
+      // Only the mentor who created it can update/delete
+      allow update, delete: if isMentor() && resource.data.mentorId == request.auth.uid;
+    }
+    
+    // Assessment Submissions collection
+    match /assessmentSubmissions/{submissionId} {
+      // Mentors can read all assessment submissions
+      allow read: if isMentor();
+      
+      // Students can read their own assessment submissions
+      allow read: if isStudent() && resource.data.studentId == request.auth.uid;
+      
+      // Students can create their own assessment submissions
+      allow create: if isStudent() && request.resource.data.studentId == request.auth.uid;
+      
+      // Students can update their own submissions (if not yet graded)
+      allow update: if isStudent() && resource.data.studentId == request.auth.uid && resource.data.status != 'Graded';
+      
+      // Mentors can update submissions (for grading)
+      allow update: if isMentor();
+    }
+    
+    // Submissions collection (for assignments)
     match /submissions/{submissionId} {
       // Mentors can read all submissions
       allow read: if isMentor();

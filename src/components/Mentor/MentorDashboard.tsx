@@ -13,6 +13,7 @@ import { useClasses } from '../../hooks/useClasses';
 import { useMentorStats } from '../../hooks/useMentorStats';
 import { useAttendance } from '../../hooks/useAttendance';
 import { useAssignments } from '../../hooks/useAssignments';
+import { useAssessments as useAssessmentsHook } from '../../hooks/useAssessments';
 import { useAnnouncements } from '../../hooks/useAnnouncements';
 import { useMaterials } from '../../hooks/useMaterials';
 import { useVideos } from '../../hooks/useVideos';
@@ -208,6 +209,16 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   // Use Firebase announcements or fallback to mock
   const announcements = firebaseAnnouncements.length > 0 ? firebaseAnnouncements : mockAnnouncementsList;
   
+  // Firebase Assessments Integration
+  const {
+    assessments: firebaseAssessments,
+    loading: assessmentsLoadingHook,
+    addAssessment: addAssessmentToFirebase
+  } = useAssessmentsHook();
+  
+  // Use Firebase assessments or fallback to mock
+  const assessments = firebaseAssessments.length > 0 ? firebaseAssessments : mockAssessmentsList;
+  
   const [selectedSubmission, setSelectedSubmission] = useState<AssignmentSubmission | null>(null);
   const [gradeScore, setGradeScore] = useState<number>(95);
   const [gradeFeedback, setGradeFeedback] = useState<string>('');
@@ -224,11 +235,14 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
   const [selectedAssignmentForSubmissions, setSelectedAssignmentForSubmissions] = useState<any>(null);
   const [showGradingModal, setShowGradingModal] = useState(false);
 
-  // Assessments state
-  const [assessments, setAssessments] = useState(mockAssessmentsList);
+  // Assessments state - now uses Firebase
   const [showCreateAssessmentModal, setShowCreateAssessmentModal] = useState(false);
   const [newAssessmentTitle, setNewAssessmentTitle] = useState('');
   const [newAssessmentType, setNewAssessmentType] = useState('Coding Test');
+  const [newAssessmentDueDate, setNewAssessmentDueDate] = useState('2026-08-20');
+  const [newAssessmentTotalMarks, setNewAssessmentTotalMarks] = useState(100);
+  const [newAssessmentDuration, setNewAssessmentDuration] = useState(60);
+  const [selectedClassForAssessment, setSelectedClassForAssessment] = useState<string>('');
 
   // Study Materials state - Firebase Integration
   const [showUploadMaterialModal, setShowUploadMaterialModal] = useState(false);
@@ -499,25 +513,50 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
     }
   };
 
-  const handleCreateAssessment = (e: React.FormEvent) => {
+  const handleCreateAssessment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAssessmentTitle) return;
+    if (!newAssessmentTitle || !selectedClassForAssessment || !userProfile) {
+      alert('Please fill in all required fields');
+      return;
+    }
 
-    const newAsm = {
-      id: `asm_${Date.now()}`,
-      title: newAssessmentTitle,
-      type: newAssessmentType,
-      batch: 'Enterprise Full-Stack 2026-A',
-      totalMarks: 100,
-      date: new Date().toISOString().split('T')[0],
-      evaluatedCount: 0,
-      totalCount: 60,
-      status: 'Scheduled'
-    };
+    try {
+      const selectedClass = classes.find(c => c.id === selectedClassForAssessment);
+      if (!selectedClass) {
+        alert('Selected class not found');
+        return;
+      }
 
-    setAssessments([newAsm, ...assessments]);
-    setShowCreateAssessmentModal(false);
-    setNewAssessmentTitle('');
+      const assessmentData = {
+        title: newAssessmentTitle,
+        type: newAssessmentType as 'Coding Test' | 'Quiz' | 'Practical Assessment' | 'Project Evaluation',
+        mentorId: userProfile.id,
+        mentorName: userProfile.name || userProfile.email,
+        classId: selectedClass.id,
+        className: selectedClass.title,
+        batchName: selectedClass.batchName,
+        totalMarks: newAssessmentTotalMarks,
+        duration: newAssessmentDuration,
+        scheduledDate: new Date().toISOString(),
+        dueDate: newAssessmentDueDate,
+        status: 'Scheduled' as 'Scheduled' | 'Active' | 'Completed'
+      };
+
+      await addAssessmentToFirebase(assessmentData);
+      
+      setShowCreateAssessmentModal(false);
+      setNewAssessmentTitle('');
+      setSelectedClassForAssessment('');
+      setNewAssessmentType('Coding Test');
+      setNewAssessmentDueDate('2026-08-20');
+      setNewAssessmentTotalMarks(100);
+      setNewAssessmentDuration(60);
+      
+      alert('Assessment created successfully!');
+    } catch (error: any) {
+      console.error('Error creating assessment:', error);
+      alert('Failed to create assessment: ' + error.message);
+    }
   };
 
   const handleAddMaterial = async (e: React.FormEvent) => {
@@ -2120,17 +2159,17 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
             }`}>{a.title}</h3>
             <p className={`text-xs ${
               theme === 'dark' ? 'text-[#777]' : 'text-[#64748B]'
-            }`}>{a.batch} • {a.totalMarks} Marks</p>
+            }`}>{a.className || a.batchName} • {a.totalMarks} Marks • {a.duration}min</p>
 
             <div className={`pt-2 border-t flex justify-between items-center text-xs ${
               theme === 'dark' ? 'border-[#1A1A1A] text-[#AAA]' : 'border-gray-200 text-[#64748B]'
             }`}>
-              <span>Evaluated: <strong>{a.evaluatedCount}/{a.totalCount}</strong></span>
+              <span>Due: {new Date(a.dueDate).toLocaleDateString()}</span>
               <button className={`px-3 py-1 rounded-lg border ${
                 theme === 'dark' 
                   ? 'bg-[#1A1A1A] text-white border-[#2A2A2A]' 
                   : 'bg-gray-100 text-gray-900 border-gray-300'
-              }`}>Enter Marks</button>
+              }`}>View Details</button>
             </div>
           </div>
         ))}
@@ -2165,10 +2204,10 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Practical Assessment: Distributed Locking"
+                  placeholder="e.g. Mid-Term Examination"
                   value={newAssessmentTitle}
                   onChange={(e) => setNewAssessmentTitle(e.target.value)}
-                  className={`w-full p-2.5 rounded-xl ${
+                  className={`w-full p-2.5 rounded-xl border ${
                     theme === 'dark' 
                       ? 'bg-[#0D0D0D] border-[#222] text-white' 
                       : 'bg-gray-50 border-gray-300 text-gray-900'
@@ -2179,11 +2218,32 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
               <div>
                 <label className={`block font-semibold mb-1 ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                }`}>Select Class *</label>
+                <select
+                  required
+                  value={selectedClassForAssessment}
+                  onChange={(e) => setSelectedClassForAssessment(e.target.value)}
+                  className={`w-full p-2.5 rounded-xl border ${
+                    theme === 'dark' 
+                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900'
+                  }`}
+                >
+                  <option value="">Choose a class...</option>
+                  {classes.map(cls => (
+                    <option key={cls.id} value={cls.id}>{cls.title}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className={`block font-semibold mb-1 ${
+                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
                 }`}>Type</label>
                 <select
                   value={newAssessmentType}
                   onChange={(e) => setNewAssessmentType(e.target.value)}
-                  className={`w-full p-2.5 rounded-xl ${
+                  className={`w-full p-2.5 rounded-xl border ${
                     theme === 'dark' 
                       ? 'bg-[#0D0D0D] border-[#222] text-white' 
                       : 'bg-gray-50 border-gray-300 text-gray-900'
@@ -2196,13 +2256,68 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({
                 </select>
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={`block font-semibold mb-1 ${
+                    theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                  }`}>Total Marks *</label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={newAssessmentTotalMarks}
+                    onChange={(e) => setNewAssessmentTotalMarks(parseInt(e.target.value))}
+                    className={`w-full p-2.5 rounded-xl border ${
+                      theme === 'dark' 
+                        ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                        : 'bg-gray-50 border-gray-300 text-gray-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className={`block font-semibold mb-1 ${
+                    theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                  }`}>Duration (min) *</label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={newAssessmentDuration}
+                    onChange={(e) => setNewAssessmentDuration(parseInt(e.target.value))}
+                    className={`w-full p-2.5 rounded-xl border ${
+                      theme === 'dark' 
+                        ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                        : 'bg-gray-50 border-gray-300 text-gray-900'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className={`block font-semibold mb-1 ${
+                  theme === 'dark' ? 'text-[#AAA]' : 'text-[#64748B]'
+                }`}>Due Date *</label>
+                <input
+                  type="date"
+                  required
+                  value={newAssessmentDueDate}
+                  onChange={(e) => setNewAssessmentDueDate(e.target.value)}
+                  className={`w-full p-2.5 rounded-xl border ${
+                    theme === 'dark' 
+                      ? 'bg-[#0D0D0D] border-[#222] text-white' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900'
+                  }`}
+                />
+              </div>
+
               <div className={`flex justify-end gap-2 pt-3 border-t ${
                 theme === 'dark' ? 'border-[#1A1A1A]' : 'border-gray-200'
               }`}>
                 <button type="button" onClick={() => setShowCreateAssessmentModal(false)} className={`px-4 py-2 ${
                   theme === 'dark' ? 'text-[#888]' : 'text-[#64748B]'
                 }`}>Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-[#6366F1] text-white rounded-xl font-semibold">Schedule Test</button>
+                <button type="submit" className="px-4 py-2 bg-[#6366F1] text-white rounded-xl font-semibold">Schedule Assessment</button>
               </div>
             </form>
           </div>

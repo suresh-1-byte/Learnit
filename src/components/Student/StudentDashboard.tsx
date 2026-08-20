@@ -9,6 +9,7 @@ import { useMaterials } from '../../hooks/useMaterials';
 import { useVideos } from '../../hooks/useVideos';
 import { StudentAssignments } from './StudentAssignments';
 import { StudentAttendance } from './StudentAttendance';
+import { StudentAssessments } from './StudentAssessments';
 import {
   BookOpen,
   Calendar,
@@ -19,7 +20,8 @@ import {
   User,
   CheckCircle,
   Clock,
-  TrendingUp
+  TrendingUp,
+  Award
 } from 'lucide-react';
 
 interface StudentDashboardProps {
@@ -270,6 +272,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             { id: 'my-classes', label: 'My Classes', icon: BookOpen },
             { id: 'schedule', label: "Today's Schedule", icon: Calendar },
             { id: 'assignments', label: 'Assignments', icon: FileText },
+            { id: 'assessments', label: 'Assessments', icon: Award },
             { id: 'attendance', label: 'Attendance', icon: CheckCircle },
             { id: 'materials', label: 'Study Materials', icon: BookOpen },
             { id: 'videos', label: 'Video Library', icon: Video },
@@ -360,6 +363,11 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             studentId={userProfile?.id || ''}
             classId={userProfile?.classId || ''}
           />
+        )}
+
+        {/* Assessments Tab - Use new component */}
+        {currentTab === 'assessments' && (
+          <StudentAssessments />
         )}
 
         {/* Attendance Tab - Use existing component */}
