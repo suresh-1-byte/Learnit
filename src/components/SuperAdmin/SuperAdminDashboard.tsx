@@ -2613,6 +2613,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
           </tbody>
         </table>
       </div>
+      </div>
     </div>
   );
 

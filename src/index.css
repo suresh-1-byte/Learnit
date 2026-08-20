@@ -5,59 +5,145 @@
     min-height: 100%;
   }
   
-  /* Dark Theme Variables - Spatial UI */
+  /* Dark Theme Variables - Spatial UI - ENHANCED FOR BETTER READABILITY */
   html.dark {
-    /* Base Colors */
-    --background: #0B0B10;
-    --foreground: #EDEDED;
+    /* Base Colors - Slightly brighter background */
+    --background: #0D0D15;
+    --foreground: #F5F5F7;
     
-    /* Spatial Surfaces */
-    --surface: #0D0D14;
-    --surface-elevated: #14141C;
-    --surface-elevated-2: #1A1A24;
-    --surface-muted: #1A1A1A;
-    --surface-glass: rgba(13, 13, 20, 0.8);
-    --surface-glass-strong: rgba(13, 13, 20, 0.95);
+    /* Spatial Surfaces - More visible card backgrounds */
+    --surface: #141420;
+    --surface-elevated: #1A1A28;
+    --surface-elevated-2: #20202E;
+    --surface-muted: #1F1F2A;
+    --surface-glass: rgba(20, 20, 32, 0.85);
+    --surface-glass-strong: rgba(20, 20, 32, 0.95);
     
-    /* Borders */
-    --border: #1A1A1A;
-    --border-subtle: #222222;
-    --border-glass: rgba(255, 255, 255, 0.08);
+    /* Borders - More visible */
+    --border: #2A2A35;
+    --border-subtle: #252530;
+    --border-glass: rgba(255, 255, 255, 0.12);
     
-    /* Text */
+    /* Text - Improved contrast */
     --text-primary: #FFFFFF;
-    --text-secondary: #BBB;
-    --text-muted: #777;
-    --text-on-surface: #EDEDED;
+    --text-secondary: #E5E5E7;
+    --text-muted: #B4B4B8;
+    --text-on-surface: #FFFFFF;
     
-    /* Icons */
-    --icon: #777;
-    --icon-muted: #555;
+    /* Icons - More visible */
+    --icon: #9CA3AF;
+    --icon-muted: #71717A;
     --icon-accent: #6366F1;
     
     /* Inputs */
-    --input-background: #111;
-    --input-border: #222;
+    --input-background: #1A1A28;
+    --input-border: #2A2A35;
+    --input-focus-glow: rgba(99, 102, 241, 0.2);
+    
+    /* Component Backgrounds - More visible */
+    --header-background: #0F0F18;
+    --sidebar-background: #0F0F18;
+    --card-background: #141420;
+    --hero-background: #0A0A12;
+    
+    /* Spatial Shadows - More pronounced */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 16px 56px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 24px rgba(99, 102, 241, 0.2);
+    --shadow-glow-strong: 0 0 36px rgba(99, 102, 241, 0.3);
+    
+    /* Spatial Glows - More visible */
+    --glow-primary: rgba(99, 102, 241, 0.5);
+    --glow-secondary: rgba(168, 85, 247, 0.5);
+    --glow-success: rgba(16, 185, 129, 0.5);
+    --glow-ambient: rgba(99, 102, 241, 0.12);
+    
+    /* Ambient Background */
+    --ambient-gradient: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom left, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+    
+    /* Accents */
+    --accent-primary: #6366F1;
+    --accent-secondary: #A855F7;
+    --accent-emerald: #10B981;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    
+    /* Spatial Effects */
+    --blur-sm: 8px;
+    --blur: 12px;
+    --blur-lg: 20px;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition: 220ms;
+    --transition-slow: 350ms;
+    
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  /* Light Theme Variables - Spatial UI - ENHANCED FOR BETTER READABILITY */
+  html.light {
+    /* Base Colors - Cleaner white */
+    --background: #FAFBFC;
+    --foreground: #18181B;
+    
+    /* Spatial Surfaces - More defined */
+    --surface: #FFFFFF;
+    --surface-elevated: #FAFBFC;
+    --surface-elevated-2: #F4F5F7;
+    --surface-muted: #E4E7EB;
+    --surface-glass: rgba(255, 255, 255, 0.90);
+    --surface-glass-strong: rgba(255, 255, 255, 0.97);
+    
+    /* Borders - More visible */
+    --border: #D4D8DD;
+    --border-subtle: #E2E5E9;
+    --border-glass: rgba(0, 0, 0, 0.08);
+    
+    /* Text - Stronger contrast */
+    --text-primary: #09090B;
+    --text-secondary: #27272A;
+    --text-muted: #52525B;
+    --text-on-surface: #09090B;
+    
+    /* Icons - More visible */
+    --icon: #52525B;
+    --icon-muted: #A1A1AA;
+    --icon-accent: #6366F1;
+    
+    /* Inputs */
+    --input-background: #FAFBFC;
+    --input-border: #D4D8DD;
     --input-focus-glow: rgba(99, 102, 241, 0.15);
     
     /* Component Backgrounds */
-    --header-background: #0D0D14;
-    --sidebar-background: #0D0D14;
-    --card-background: #0A0A0A;
-    --hero-background: #050505;
+    --header-background: #FFFFFF;
+    --sidebar-background: #FFFFFF;
+    --card-background: #FFFFFF;
+    --hero-background: #FFFFFF;
     
-    /* Spatial Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+    /* Spatial Shadows - More defined */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.10);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.18);
     --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
-    --shadow-glow-strong: 0 0 30px rgba(99, 102, 241, 0.25);
+    --shadow-glow-strong: 0 0 30px rgba(99, 102, 241, 0.22);
     
     /* Spatial Glows */
-    --glow-primary: rgba(99, 102, 241, 0.4);
-    --glow-secondary: rgba(168, 85, 247, 0.4);
-    --glow-success: rgba(16, 185, 129, 0.4);
+    --glow-primary: rgba(99, 102, 241, 0.35);
+    --glow-secondary: rgba(168, 85, 247, 0.35);
+    --glow-success: rgba(16, 185, 129, 0.35);
     --glow-ambient: rgba(99, 102, 241, 0.08);
     
     /* Ambient Background */
@@ -84,93 +170,7 @@
     
     /* Transitions */
     --transition-fast: 150ms;
-    --transition: 250ms;
-    --transition-slow: 350ms;
-    
-    background-color: var(--background);
-    color: var(--foreground);
-  }
-  
-  /* Light Theme Variables - Spatial UI */
-  html.light {
-    /* Base Colors */
-    --background: #F7F8FC;
-    --foreground: #0F172A;
-    
-    /* Spatial Surfaces */
-    --surface: #FFFFFF;
-    --surface-elevated: #F8FAFC;
-    --surface-elevated-2: #F1F5F9;
-    --surface-muted: #E2E8F0;
-    --surface-glass: rgba(255, 255, 255, 0.85);
-    --surface-glass-strong: rgba(255, 255, 255, 0.95);
-    
-    /* Borders */
-    --border: #E2E8F0;
-    --border-subtle: #CBD5E1;
-    --border-glass: rgba(0, 0, 0, 0.06);
-    
-    /* Text */
-    --text-primary: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #64748B;
-    --text-on-surface: #0F172A;
-    
-    /* Icons */
-    --icon: #64748B;
-    --icon-muted: #94A3B8;
-    --icon-accent: #6366F1;
-    
-    /* Inputs */
-    --input-background: #F8FAFC;
-    --input-border: #E2E8F0;
-    --input-focus-glow: rgba(99, 102, 241, 0.1);
-    
-    /* Component Backgrounds */
-    --header-background: #FFFFFF;
-    --sidebar-background: #FFFFFF;
-    --card-background: #FFFFFF;
-    --hero-background: #FFFFFF;
-    
-    /* Spatial Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
-    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.12);
-    --shadow-glow-strong: 0 0 30px rgba(99, 102, 241, 0.18);
-    
-    /* Spatial Glows */
-    --glow-primary: rgba(99, 102, 241, 0.3);
-    --glow-secondary: rgba(168, 85, 247, 0.3);
-    --glow-success: rgba(16, 185, 129, 0.3);
-    --glow-ambient: rgba(99, 102, 241, 0.05);
-    
-    /* Ambient Background */
-    --ambient-gradient: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
-                       radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.04) 0%, transparent 50%),
-                       radial-gradient(ellipse at bottom left, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
-    
-    /* Accents */
-    --accent-primary: #6366F1;
-    --accent-secondary: #A855F7;
-    --accent-emerald: #10B981;
-    --success: #10B981;
-    --warning: #F59E0B;
-    --danger: #EF4444;
-    
-    /* Spatial Effects */
-    --blur-sm: 8px;
-    --blur: 12px;
-    --blur-lg: 20px;
-    --radius-sm: 8px;
-    --radius: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-    
-    /* Transitions */
-    --transition-fast: 150ms;
-    --transition: 250ms;
+    --transition: 220ms;
     --transition-slow: 350ms;
     
     background-color: var(--background);
@@ -224,43 +224,45 @@
     background-attachment: fixed;
   }
   
-  /* Spatial Surface Base */
+  /* Spatial Surface Base - Enhanced */
   .spatial-surface {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-sm);
   }
   
-  /* Spatial Glass */
+  /* Spatial Glass - Enhanced */
   .spatial-glass {
     background: var(--surface-glass);
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
     border: 1px solid var(--border-glass);
     border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
   }
   
-  /* Spatial Elevated */
+  /* Spatial Elevated - Enhanced */
   .spatial-elevated {
     background: var(--surface-elevated);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow);
   }
   
-  /* Spatial Glow */
+  /* Spatial Glow - Enhanced */
   .spatial-glow {
     box-shadow: var(--shadow-glow);
   }
   
-  /* Spatial Hover Effect */
+  /* Spatial Hover Effect - Enhanced */
   .spatial-hover {
-    transition: transform var(--transition) ease, box-shadow var(--transition) ease, border-color var(--transition) ease;
+    transition: transform var(--transition) ease, box-shadow var(--transition) ease, border-color var(--transition) ease, background var(--transition) ease;
   }
   
   .spatial-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    border-color: var(--accent-primary);
   }
 }
