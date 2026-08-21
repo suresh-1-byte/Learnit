@@ -2719,18 +2719,18 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
       {activeTab === 'colleges' && (
         <section className="max-w-6xl mx-auto px-6 py-16 space-y-12">
           <div className="text-center space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#A855F7]">Campus Network</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#10B981]">TRUST & CREDIBILITY</span>
             <h1 className={`text-4xl font-extrabold ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
-            }`}>Partner Institutions</h1>
+            }`}>Colleges Already Partnering With Us</h1>
             <p className={`text-xs sm:text-sm max-w-xl mx-auto ${
               theme === 'dark' ? 'text-[#CCC]' : 'text-gray-700'
             }`}>
-              Engineering institutions delivering industry-aligned training programs through our partnership ecosystem.
+              The reason these campuses trust us with their students: real industry training, and real placements.
             </p>
           </div>
 
-          {/* Partnership Overview - Statistics will be shown when approved by Super Admin */}
+          {/* Placement Highlight Banner */}
           <motion.div 
             className={`p-6 rounded-2xl border text-center ${
               theme === 'dark' ? 'bg-[#0A0A0E] border-white/10' : 'bg-white border-gray-200'
@@ -2739,11 +2739,89 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className={`text-sm ${
+            <div className={`text-4xl font-bold mb-2 ${
+              theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
+            }`}>25+</div>
+            <p className={`text-sm font-semibold ${
               theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-            }`}>
-              Partnership statistics will be displayed here once approved by Super Admin.
-            </p>
+            }`}>Successful student placements</p>
+            <p className={`text-xs mt-2 ${
+              theme === 'dark' ? 'text-[#888]' : 'text-gray-500'
+            }`}>Across our partner campuses — and growing</p>
+          </motion.div>
+
+          {/* Partner College Cards */}
+          <motion.div 
+            className="space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  name: 'Gandhi Education Trust',
+                  location: 'Davangere',
+                  detail: 'Estd. 2014',
+                  color: '#6366F1',
+                  initial: 'G'
+                },
+                {
+                  name: 'Davanagere Institute of Advanced Management Studies',
+                  detail: 'Spurthi Educational Trust',
+                  location: 'Davangere',
+                  color: '#A855F7',
+                  initial: 'D'
+                },
+                {
+                  name: 'Dr. C.V. Raman Educational Association',
+                  detail: 'Registered Trust',
+                  location: 'Bengaluru',
+                  color: '#10B981',
+                  initial: 'C'
+                }
+              ].map((college, index) => (
+                <motion.div
+                  key={index}
+                  className={`p-6 rounded-2xl border space-y-4 ${
+                    theme === 'dark' 
+                      ? 'bg-[#0A0A0E] border-white/10 hover:border-[#6366F1]/30' 
+                      : 'bg-white border-gray-200 hover:border-[#6366F1]/30'
+                  } transition-all duration-300 hover:shadow-lg`}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.1 * index }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                >
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <div 
+                      className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl`}
+                      style={{ 
+                        backgroundColor: theme === 'dark' ? `${college.color}20` : `${college.color}10`,
+                        color: college.color
+                      }}
+                    >
+                      {college.initial}
+                    </div>
+                    <div>
+                      <h3 className={`font-bold text-sm mb-1 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{college.name}</h3>
+                      <p className={`text-xs ${
+                        theme === 'dark' ? 'text-[#A855F7]' : 'text-[#6366F1]'
+                      }`}>{college.detail}</p>
+                      {college.location && (
+                        <p className={`text-xs mt-1 flex items-center justify-center gap-1 ${
+                          theme === 'dark' ? 'text-[#888]' : 'text-gray-500'
+                        }`}>
+                          <MapPin className="w-3 h-3" /> {college.location}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Partnership Benefits */}
@@ -2751,7 +2829,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
             className="space-y-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <h2 className={`font-bold text-lg ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -2824,40 +2902,6 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 }`}>Direct access to corporate recruitment drives and hiring partners.</p>
               </motion.div>
             </div>
-          </motion.div>
-
-          {/* Partner College Cards - Will be shown when approved by Super Admin */}
-          <motion.div 
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <h2 className={`font-bold text-lg ${
-              theme === 'dark' ? 'text-white' : 'text-gray-900'
-            }`}>Featured Partners</h2>
-            <motion.div 
-              className={`p-8 rounded-2xl border text-center ${
-                theme === 'dark' 
-                  ? 'bg-[#0A0A0E] border-white/10' 
-                  : 'bg-white border-gray-200'
-              }`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Building2 className={`w-12 h-12 mx-auto mb-4 ${
-                theme === 'dark' ? 'text-[#6366F1]' : 'text-[#6366F1]'
-              }`} />
-              <h3 className={`text-lg font-semibold mb-2 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>No Partner Institutions Yet</h3>
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
-              }`}>
-                Partner institutions will be displayed here once approved and published by Super Admin.
-              </p>
-            </motion.div>
           </motion.div>
 
           {/* Partnership CTA */}
