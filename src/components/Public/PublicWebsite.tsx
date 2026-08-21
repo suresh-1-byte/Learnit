@@ -2446,7 +2446,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
               }`}>
                 <div className={`text-4xl font-bold mb-2 ${
                   theme === 'dark' ? 'text-[#10B981]' : 'text-[#10B981]'
-                }`}>8+</div>
+                }`}>11+</div>
                 <p className={`text-sm font-semibold ${
                   theme === 'dark' ? 'text-[#AAA]' : 'text-gray-600'
                 }`}>Hiring Partners</p>
@@ -2455,7 +2455,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                 }`}>Building partnerships with leading companies</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   { 
                     name: 'Infosight Consulting', 
@@ -2474,13 +2474,6 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                     type: 'Artificial Intelligence',
                     status: 'Hiring Partner',
                     color: '#10B981'
-                  },
-                  { 
-                    name: 'Partner Company 4', 
-                    type: 'Technology Services',
-                    status: 'Partnership Pending',
-                    color: '#F59E0B',
-                    placeholder: true
                   }
                 ].map((partner, index) => (
                   <motion.div
@@ -2519,9 +2512,7 @@ export const PublicWebsite: React.FC<PublicWebsiteProps> = ({ onAccessErp, onClo
                       theme === 'dark' ? 'border-white/10' : 'border-gray-200'
                     }`}>
                       <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold ${
-                        partner.placeholder
-                          ? theme === 'dark' ? 'bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20' : 'bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20'
-                          : theme === 'dark' ? 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20' : 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20'
+                        theme === 'dark' ? 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20' : 'bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20'
                       }`}>
                         {partner.status}
                       </div>
