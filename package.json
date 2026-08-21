@@ -13,7 +13,8 @@
     "add-profiles": "tsx scripts/addFirestoreProfiles.ts",
     "create-profiles": "tsx scripts/createFirestoreProfiles.ts",
     "generate-test-data": "tsx scripts/generateMentorTestData.ts",
-    "generate-students": "tsx scripts/generateTestStudents.ts"
+    "generate-students": "tsx scripts/generateTestStudents.ts",
+    "add-colleges": "tsx scripts/addPartnerColleges.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1114.0",

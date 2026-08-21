@@ -166,6 +166,18 @@ service cloud.firestore {
       allow update, delete: if isMentor() && resource.data.uploadedBy == request.auth.uid;
     }
     
+    // Colleges collection
+    match /colleges/{collegeId} {
+      // Anyone authenticated can read colleges
+      allow read: if isSignedIn();
+      
+      // Only mentors can create/update colleges (for now, can be restricted to admin later)
+      allow create, update: if isMentor();
+      
+      // Only mentors can delete colleges
+      allow delete: if isMentor();
+    }
+    
     // Default: deny all other access
     match /{document=**} {
       allow read, write: if false;
